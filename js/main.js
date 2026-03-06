@@ -26,4 +26,10 @@ async function getAbilityById(id){
     console.log(data)
 }
 
-getPokemonById(2);
+async function getEvolutionChainById(id){
+    const apiFetch = await fetch(`https://pokeapi.co/api/v2/evolution-chain/${id}`);
+    const data = await apiFetch.json();
+    console.log(data)
+}
+
+// getPokemonById(255);

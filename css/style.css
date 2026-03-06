@@ -1,0 +1,130 @@
+:root{
+    --main: #DDDDDD;
+    --secon: #AAAAAA;
+}
+
+@font-face {
+    font-family: kanit;
+    src: url(../assets/Kanit/Kanit-Light.ttf);
+}
+
+*{
+    object-fit: contain;
+    box-sizing: border-box;
+    font-family: kanit;
+}
+
+h1, h2, h3{
+    margin: 0;
+    line-height: 25px;
+}
+
+
+html{
+    height: 100%;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+}
+
+main{
+    width: 100%;
+    max-width: 1300px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--main);
+    justify-content: center;
+}
+
+.upper, .lower{
+    padding: 2vw 0 0 0;
+    min-height: 50vh;
+    width: 95%;
+    display: flex;
+    justify-content: space-around;
+    gap: 2vw;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.lower{
+    padding-bottom: 30px;
+}
+
+.block{
+    background-color: var(--secon);
+    padding: 20px;
+}
+
+#pkmnImage{
+    min-width: 300px;
+    flex-grow: 2;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-image: url(../assets/habitats/sea.png);
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+}
+
+
+#info-evo{
+    min-width: 325px;
+    flex-grow: 5;
+}
+
+#info{
+    display: flex;
+    justify-content: space-between;
+}
+
+#name{
+    margin-right: 20px;
+}
+
+#badges{
+    flex-grow: 1;
+    display: flex;
+    justify-content: left;
+    gap: 10px;
+}
+
+#badges img{
+    height: 3vw;
+    min-height: 32px;
+    aspect-ratio: 1 / 1;
+}
+
+#stats{
+    min-width: 300px;
+    flex-grow: 4;
+}
+
+#abilities{
+    min-width: 325px;
+    flex-grow: 3;
+}
+
+#weaknesses{
+    min-width: 250px;
+    flex-grow: 3;
+}
+
+#moveset{
+    min-width: 350px;
+    flex-grow: 3;
+}
+
+
+#searchBar{
+    background-color: #AAAAAA;
+    width: 900px;
+    max-width: 100%;
+    display: flex;
+}
