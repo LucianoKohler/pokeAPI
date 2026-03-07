@@ -1,4 +1,4 @@
-async function getPokemonById(id){
+async function getPokemonById(id){  
     const apiFetch = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const data = await apiFetch.json();
     console.log(data);
@@ -13,23 +13,11 @@ async function getPokemonById(id){
     // Gives descriptive sentence
 }
 
-async function getMoveById(id){
-    const apiFetch = await fetch(`https://pokeapi.co/api/v2/move/${id}`);
+async function getFromAPI(query, id){
+    const apiFetch = await fetch(`https://pokeapi.co/api/v2/${query}/${id}`);
     const data = await apiFetch.json();
     console.log(data)
 }
 
-
-async function getAbilityById(id){
-    const apiFetch = await fetch(`https://pokeapi.co/api/v2/ability/${id}`);
-    const data = await apiFetch.json();
-    console.log(data)
-}
-
-async function getEvolutionChainById(id){
-    const apiFetch = await fetch(`https://pokeapi.co/api/v2/evolution-chain/${id}`);
-    const data = await apiFetch.json();
-    console.log(data)
-}
 
 // getPokemonById(255);
