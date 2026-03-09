@@ -52,11 +52,11 @@ main{
 }
 
 .upper, .lower{
-    padding: 20px;
+    padding: 20px 20px 0 20px;
     width: 100%;
     display: flex;
     justify-content: space-around;
-    gap: 1.5vw;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
@@ -68,6 +68,7 @@ main{
 }
 
 #pkmnImage{
+    padding-bottom: 10px;
     flex: 2 1 300px;
     display: flex;
     align-items: center;
@@ -104,13 +105,14 @@ main{
 .infoUpper img{
     aspect-ratio: 1/1;
     height: 32px;
+    width: 32px;
 }
 
 .infoUpper h1{
-    font-size: 64px;
+    font-size: calc(32px + 2vw);
     list-style: none;
     margin: 0;
-    line-height: 50px;
+    line-height: calc(32px + 1vw);
     overflow: hidden;
 }
 
@@ -118,8 +120,10 @@ main{
     margin-left: 10px;
     display: flex;
     align-items: end;
+    justify-content: start;
+    flex-wrap: nowrap;
+    flex: 1;
     gap: 5px;
-    flex-wrap: wrap;
 }
 
 .desc{
@@ -272,14 +276,14 @@ details summary::-webkit-details-marker {
     width: 900px;
     max-width: 100%;
     display: flex;
-}
-
-#searchBar div{
-    flex: 1;
+    flex-wrap: nowrap;
 }
 
 #searchBar textarea{
     resize: none;
+    height: 46px;
+    line-height: 40px;
+    padding-left: 10px;
 }
 
 #searchBar button{
@@ -305,8 +309,12 @@ details summary::-webkit-details-marker {
     left: 20px;
 }
 
+.bar{
+    flex: 2 1;
+}
+
 .nextPrev{
-    flex: 1;
+    flex: 1 2;
     width: 100%;
 }
 
@@ -319,7 +327,7 @@ details summary::-webkit-details-marker {
 }
 
 .fullList{
-    flex: 2;
+    flex: 2 1;
 }
 
 .fullList button{
