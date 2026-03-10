@@ -1,10 +1,19 @@
 pokemonState = "front_default";
 currentData = JSON.parse(localStorage.getItem(25))
 
+function capitalize(str){
+    words = str.split(" ");
+    finalWord = ""
+    words.forEach((word) => {finalWord += word.charAt(0).toUpperCase() + word.slice(1) + " ";})
+
+    return finalWord
+}
+
+
 async function getPokemonById(id){
     // Cache
     if(localStorage.getItem(id)) {
-        console.log("cache encontrado: " + JSON.parse(localStorage.getItem(id)));
+        console.log("cache encontrado");
         currentData = JSON.parse(localStorage.getItem(id))
         return JSON.parse(localStorage.getItem(id));
     }
@@ -16,7 +25,17 @@ async function getPokemonById(id){
     const flavorTextFetch = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
     const data2 = await flavorTextFetch.json();
 
-    localStorage.setItem(id, JSON.stringify({data1, data2}));
+    try{
+        localStorage.setItem(id, JSON.stringify({data1, data2}));
+    }catch (e){
+        if(e.name == "QuotaExceededError"){
+            console.log("LS cheio, limpando!");
+            localStorage.clear()
+            localStorage.setItem(id, JSON.stringify({data1, data2}));
+        }else{
+            throw e;
+        }
+    }
     currentData = {data1, data2}
 
     return {data1, data2}
@@ -25,15 +44,40 @@ async function getPokemonById(id){
 async function renderPokemon(id){
     currentID = id
     data = await getPokemonById(id);
+    pokemonState = "front_default"
     renderPokemonImage(data, pokemonState);
 
+    // Locking/unlocking buttons
+    if(currentData.data1.sprites["back_default"] == null){
+        document.getElementById("rotatePokemon").onclick = "";
+        document.getElementById("rotatePokemon").classList.add("disabled")
+    }else{
+        document.getElementById("rotatePokemon").onclick = () => changeImageState(1);
+        document.getElementById("rotatePokemon").classList.remove("disabled")
+    }
+    if(currentData.data1.sprites["front_shiny"] == null){
+        document.getElementById("makeShiny").classList.add("disabled")
+        document.getElementById("makeShiny").onclick = "";
+    }else{
+        document.getElementById("makeShiny").onclick = () => changeImageState(2);
+        document.getElementById("makeShiny").classList.remove("disabled")
+    }
+    if(currentData.data1.sprites["front_female"] == null){
+        document.getElementById("changeGender").classList.add("disabled")
+        document.getElementById("changeGender").onclick = "";
+    }else{
+        document.getElementById("changeGender").onclick =() => changeImageState(3);
+        document.getElementById("changeGender").classList.remove("disabled")
+    }
+
     // Info-evo div
-    document.getElementById("pokeName").innerHTML = (data.data1.name).charAt(0).toUpperCase() + (data.data1.name).slice(1);
+    document.getElementById("pokeName").innerHTML = capitalize(data.data1.name);
     document.getElementById("pokeNumber").innerHTML = "No° " + data.data1.id
     document.getElementById("pokeDesc").innerHTML = (data.data2.flavor_text_entries[0].flavor_text).replace("\f", " ")
 
-
+    // Stats
     renderPokemonStats();
+
 };
 
 async function renderPokemonImage(data = currentData, state){
@@ -52,6 +96,8 @@ async function renderPokemonStats(){
         sum += statsData[i].base_stat 
         stats[i].innerHTML = statsData[i].base_stat
         statBars[i].value = statsData[i].base_stat
+        statColor = `hsl(${(statsData[i].base_stat / 255) * 180}, 100%, 45%)`
+        statBars[i].style.setProperty("--color", statColor);
     }
     stats[6].innerHTML = sum
 }

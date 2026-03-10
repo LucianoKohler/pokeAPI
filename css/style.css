@@ -89,6 +89,22 @@ main{
     cursor: pointer;
 }
 
+.disabled{
+    cursor: default !important;
+}
+
+.disabled#rotatePokemon{
+    content:url("../assets/icons/rotate_disabled.svg");
+}
+
+.disabled#makeShiny{
+    content:url("../assets/icons/shiny_disabled.svg");
+}
+
+.disabled#changeGender{
+    content:url("../assets/icons/gender_disabled.svg");
+}
+
 #info-evo{
     flex: 5 1 350px;
     background-color: transparent;
@@ -112,7 +128,7 @@ main{
     font-size: calc(32px + 2vw);
     list-style: none;
     margin: 0;
-    line-height: calc(32px + 1vw);
+    line-height: 48px;
     overflow: hidden;
 }
 
@@ -140,6 +156,20 @@ main{
     margin: auto 0 0 0;
     border-radius: 20px;
     padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.infoLower h2{
+    width: 100%;
+}
+
+.ability{
+    border-radius: 10px;
+    flex: 1;
+    background-color: var(--terc);
+    padding: 10px;
 }
 
 .evoTree{
@@ -185,30 +215,26 @@ progress::-webkit-progress-bar {
 }
 
 progress::-webkit-progress-value {
-    background-color: lime;
+    background-color: var(--color);
     border-radius: 20px;
+    transition: width 0.2s ease, background-color 0.2s ease;
 }
 
-#abilities{
+progress::-moz-progress-bar{
+    background-color: var(--color);
+    transition: width 0.2s ease, background-color 0.2s ease;
+}
+
+#randomDiv{
     flex: 2 1 300px;
     display: flex;
     flex-direction: column;
 }
 
-.ability{
-    flex: 1;
-    margin-top: 20px;
-    text-align: justify;
-    width: 100%;
-    padding: 15px;
-    border-radius: 15px;
-    background-color: var(--terc);
-    line-height: 16px;
-}
-
 h3{
     margin: 0;
     line-height: 30px;
+    text-align: center;
 }
 
 #weaknesses{

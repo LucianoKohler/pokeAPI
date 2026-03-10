@@ -16,10 +16,10 @@
                     <div class="">
                         <img id="makeSound" height="32px" src="./assets/icons/sound.svg" alt="">
                     </div>
-                    <div class="">
-                        <img onclick="changeImageState(1)" height="32px" src="./assets/icons/replay.svg" alt="">
-                        <img onclick="changeImageState(2)" height="32px" src="./assets/icons/shiny.svg" alt="">
-                        <img onclick="changeImageState(3)" height="32px" src="./assets/icons/gender.svg" alt="">
+                    <div>
+                        <img id="rotatePokemon" onclick="changeImageState(1)" height="32px" src="./assets/icons/rotate.svg" alt="">
+                        <img id="makeShiny" onclick="changeImageState(2)" height="32px" src="./assets/icons/shiny.svg" alt="">
+                        <img id="changeGender" onclick="changeImageState(3)" height="32px" src="./assets/icons/gender.svg" alt="">
                     </div>
                 </div>
             </div>
@@ -40,15 +40,17 @@
                     <hr>
                     <div id="pokeDesc">In battle, BLAZIKEN blows out intense flames from its wrists and attacks foes courageously. The stronger the foe, the more intensely this POKéMON’s wrists burn.</div>
                 </div>
-                <div class="">
+                <div>
                     <div class="infoLower">
-                        <h2>Evolutions</h2>
-                        <div class="evoTree">
-                            <img class="evolution" src="./assets/types/no_type.png" alt="">
-                            <img class="arrow" src="./assets/icons/doubleArrowRight.svg" alt="">
-                            <img class="evolution" src="./assets/types/no_type.png" alt="">
-                            <img class="arrow" src="./assets/icons/doubleArrowRight.svg" alt="">
-                            <img class="evolution" src="./assets/types/no_type.png" alt="">
+                        <h2>Abilities</h2>
+                        <div class="ability">
+                            <h3>Ability A</h3>
+                        </div>
+                        <div class="ability">
+                            <h3>Ability B</h3>
+                        </div>
+                        <div class="ability">
+                            <h3>Ability C</h3>
                         </div>
                     </div>
                 </div>
@@ -94,16 +96,8 @@
             </div>
         </div>
         <div class="lower">
-            <div class="block" id="abilities">
-                <h2>Abilities</h2>
-                <div class="ability">
-                    <h3>Blaze</h3>
-                    <span>When this Pokémon has 1/3 or less of its HP remaining, its fire-type moves inflict 1.5× as much regular damage."</span>
-                </div>
-                <div class="ability">
-                    <h3>Speed Boost</h3>
-                    <span>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </span>
-                </div>
+            <div class="block" id="randomDiv">
+                <h2>Random div</h2>
             </div>
             <div class="block" id="weaknesses">
                 <h2>Weaknesses</h2>
@@ -199,7 +193,7 @@
             <div class="bar">
                 <textarea placeholder="Enter name or pokédex number" name="" id=""></textarea>
                 <button>
-                    <img src="assets/icons/searchBlack.svg" alt="">
+                    <img src="assets/icons/search.svg" alt="">
                 </button>
             </div>
             <div class="nextPrev">
