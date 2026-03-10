@@ -126,7 +126,7 @@ main{
     gap: 5px;
 }
 
-.desc{
+#pokeDesc{
     width: 100%;
     text-align: justify;
     overflow-wrap: break-word;
@@ -149,10 +149,10 @@ main{
 }
 
 .evolution{
-    height: 64px;
+    height: clamp(24px, 5vw, 64px);
 }
 .arrow{
-    height: 64px;
+    height: clamp(24px, 5vw, 64px);
 }
 
 #stats{
@@ -171,13 +171,22 @@ main{
     font-weight: bold;
 }
 
-#infoStats hr{
-    margin: 5px 0;
-    background-color: #666;
-    height: 6px;
+#infoStats progress{
+    margin: 5px;
+    height: 8px;
     border: none;
     border-radius: 20px;
     width: 100%;
+}
+
+progress::-webkit-progress-bar {
+  background-color: gray;
+  border-radius: 20px;
+}
+
+progress::-webkit-progress-value {
+    background-color: lime;
+    border-radius: 20px;
 }
 
 #abilities{
@@ -209,7 +218,7 @@ h3{
 
 #weaknesses table{
     border-radius: 20px;
-    width: 100%;
+    width: clamp(200px, 100%, 100%);
     height: 85%;
     border-spacing: 0;
 }
@@ -219,7 +228,10 @@ table tr:not(:first-child):not(.weakness) th{
 }
 
 th{
-    padding: 10px;
+    text-size{
+        
+    }
+    padding: clamp(10px);
 }
 
 .weakness{

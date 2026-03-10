@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/icons/favicon.png">
     <title>PokeAPI</title>
 </head>
 <body>
     <main>
         <div class="upper">
             <div class="block" id="pkmnImage">
-                <img src="./assets/types/fighting.png" alt="" height="80%" width="80%">
+                <img id="PokeImage" src="./assets/types/fighting.png" alt="" height="80%" width="80%">
                 <div class="buttons">
                     <div class="">
-                        <img height="32px" src="./assets/icons/sound.svg" alt="">
+                        <img id="makeSound" height="32px" src="./assets/icons/sound.svg" alt="">
                     </div>
                     <div class="">
-                        <img height="32px" src="./assets/icons/replay.svg" alt="">
-                        <img height="32px" src="./assets/icons/shiny.svg" alt="">
-                        <img height="32px" src="./assets/icons/gender.svg" alt="">
+                        <img onclick="changeImageState(1)" height="32px" src="./assets/icons/replay.svg" alt="">
+                        <img onclick="changeImageState(2)" height="32px" src="./assets/icons/shiny.svg" alt="">
+                        <img onclick="changeImageState(3)" height="32px" src="./assets/icons/gender.svg" alt="">
                     </div>
                 </div>
             </div>
@@ -26,8 +27,8 @@
                 <div class="">
                     <div class="infoUpper">
                         <div class="text">
-                            <span>No° XXX</span>
-                            <h1>Blaziken</h1>
+                            <span id="pokeNumber">No° XXX</span>
+                            <h1 id="pokeName">Blaziken</h1>
                         </div>
                         <div class="badges">
                             <img src="./assets/types/dragon.png" alt="">
@@ -37,7 +38,7 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="desc">In battle, BLAZIKEN blows out intense flames from its wrists and attacks foes courageously. The stronger the foe, the more intensely this POKéMON’s wrists burn.</div>
+                    <div id="pokeDesc">In battle, BLAZIKEN blows out intense flames from its wrists and attacks foes courageously. The stronger the foe, the more intensely this POKéMON’s wrists burn.</div>
                 </div>
                 <div class="">
                     <div class="infoLower">
@@ -57,44 +58,37 @@
                 <div id="infoStats">
                     <div>
                         <span>HP</span>
-                        <span>XX</span>
-                        
+                        <span class="stat">XX</span>
                     </div>
-                    <hr>
+                    <progress class="statBar" max="255" value="50"></progress>
                     <div>
                         <span>Attack</span>
-                        <span>XX</span>
-                        
+                        <span class="stat">XX</span>
                     </div>
-                    <hr>
+                    <progress class="statBar" max="255" value="50"></progress>
                     <div>
                         <span>Sp. Attack</span>
-                        <span>XX</span>
-                        
+                        <span class="stat">XX</span>
                     </div>
-                    <hr>
+                    <progress class="statBar" max="255" value="50"></progress>
                     <div>
                         <span>Defense</span>
-                        <span>XX</span>
-                        
+                        <span class="stat">XX</span>
                     </div>
-                    <hr>
+                    <progress class="statBar" max="255" value="50"></progress>
                     <div>
                         <span>Sp. Defense</span>
-                        <span>XX</span>
-                        
+                        <span class="stat">XX</span>
                     </div>
-                    <hr>
+                    <progress class="statBar" max="255" value="50"></progress>
                     <div>
                         <span>Speed</span>
-                        <span>XX</span>
-                        
+                        <span class="stat">XX</span>
                     </div>
-                    <hr>
+                    <progress class="statBar" max="255" value="50"></progress>
                     <div>
                         <span>Total</span>
-                        <span>XX</span>
-                        
+                        <span class="stat">XX</span>
                     </div>
                 </div>
             </div>
