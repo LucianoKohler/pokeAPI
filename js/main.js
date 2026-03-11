@@ -48,6 +48,55 @@ async function renderPokemon(id){
     renderPokemonImage(data, pokemonState);
 
     // Locking/unlocking buttons
+    changeButtonsAvailability()
+
+    // Info-evo div
+    document.getElementById("pokeName").innerHTML = capitalize(data.data1.name);
+    document.getElementById("pokeNumber").innerHTML = "No° " + data.data1.id
+    document.getElementById("pokeDesc").innerHTML = (data.data2.flavor_text_entries[0].flavor_text).replace("\f", " ")
+
+    // Type and miscelaneous badges
+    let types = currentData.data1.types
+    console.log(types)
+    if(types.length == 1){
+        document.getElementById("badges").innerHTML = `<img src='./assets/types/${types[0].type.name}.png'>`
+    }else{
+        document.getElementById("badges").innerHTML = `
+        <img src='./assets/types/${types[0].type.name}.png'>
+        <img src='./assets/types/${types[1].type.name}.png'>`
+    }
+
+    if(currentData.data2.is_legendary){
+        document.getElementById("badges").innerHTML += `<img src='./assets/icons/legendary.png'>`
+    }
+
+    if(currentData.data2.is_mythical){
+        document.getElementById("badges").innerHTML += `<img src='./assets/icons/mythical.png'>`
+    }
+
+    if(currentData.data2.is_baby){
+        document.getElementById("badges").innerHTML += `<img src='./assets/icons/baby.png'>`
+    }
+
+    if(currentData.data2.has_gender_differences){
+        document.getElementById("badges").innerHTML += `<img src='./assets/icons/gender_difference.png'>`
+    }
+    
+
+    // Abilities
+    let abilitiesData = currentData.data1.abilities
+    let abilitiesDiv = document.getElementById
+    for(let i = 0; i < abilitiesData.length; i++){
+
+    }
+
+    // Stats
+    renderPokemonStats();
+
+};
+
+// Makes the buttons under the pokémon image clickable or not depending if there are images accordingly
+function changeButtonsAvailability(){
     if(currentData.data1.sprites["back_default"] == null){
         document.getElementById("rotatePokemon").onclick = "";
         document.getElementById("rotatePokemon").classList.add("disabled")
@@ -69,16 +118,7 @@ async function renderPokemon(id){
         document.getElementById("changeGender").onclick =() => changeImageState(3);
         document.getElementById("changeGender").classList.remove("disabled")
     }
-
-    // Info-evo div
-    document.getElementById("pokeName").innerHTML = capitalize(data.data1.name);
-    document.getElementById("pokeNumber").innerHTML = "No° " + data.data1.id
-    document.getElementById("pokeDesc").innerHTML = (data.data2.flavor_text_entries[0].flavor_text).replace("\f", " ")
-
-    // Stats
-    renderPokemonStats();
-
-};
+}
 
 async function renderPokemonImage(data = currentData, state){
     img = await currentData.data1.sprites[state]
@@ -96,7 +136,7 @@ async function renderPokemonStats(){
         sum += statsData[i].base_stat 
         stats[i].innerHTML = statsData[i].base_stat
         statBars[i].value = statsData[i].base_stat
-        statColor = `hsl(${(statsData[i].base_stat / 255) * 180}, 100%, 45%)`
+        statColor = `hsl(${(statsData[i].base_stat / 255) * 200}, 100%, 45%)`
         statBars[i].style.setProperty("--color", statColor);
     }
     stats[6].innerHTML = sum
@@ -143,10 +183,29 @@ function changeImageState(action){
     renderPokemonImage(undefined, pokemonState)
 }
 
+// Play pokémon's sound
+function makeSound(){
+    console.log("WIP")
+    console.log(sound)
+}
+
 // All porpouse function
 async function getFromAPI(query, id){
     const apiFetch = await fetch(`https://pokeapi.co/api/v2/${query}/${id}`);
     const data = await apiFetch.json();
+}
+
+function showAbilityInfo(divNum){
+    let abilities = document.querySelectorAll(".ability")
+
+    for(let i = 0; i < abilities.length; i++){
+        if(i == divNum){
+            abilities[i].classList.toggle("clicked")
+        }else{
+            abilities[i].classList.toggle("invisible")
+        }
+    }
+
 }
 
 renderPokemon(25)

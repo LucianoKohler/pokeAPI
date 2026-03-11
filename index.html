@@ -14,7 +14,7 @@
                 <img id="PokeImage" src="./assets/types/fighting.png" alt="" height="80%" width="80%">
                 <div class="buttons">
                     <div class="">
-                        <img id="makeSound" height="32px" src="./assets/icons/sound.svg" alt="">
+                        <img id="makeSound" onclick="makeSound()" height="32px" src="./assets/icons/sound.svg" alt="">
                     </div>
                     <div>
                         <img id="rotatePokemon" onclick="changeImageState(1)" height="32px" src="./assets/icons/rotate.svg" alt="">
@@ -30,7 +30,7 @@
                             <span id="pokeNumber">No° XXX</span>
                             <h1 id="pokeName">Blaziken</h1>
                         </div>
-                        <div class="badges">
+                        <div id="badges">
                             <img src="./assets/types/dragon.png" alt="">
                             <img src="./assets/types/dragon.png" alt="">
                             <img src="./assets/types/dragon.png" alt="">
@@ -43,14 +43,19 @@
                 <div>
                     <div class="infoLower">
                         <h2>Abilities</h2>
-                        <div class="ability">
-                            <h3>Ability A</h3>
-                        </div>
-                        <div class="ability">
-                            <h3>Ability B</h3>
-                        </div>
-                        <div class="ability">
-                            <h3>Ability C</h3>
+                        <div id="abilities">
+                            <div class="ability" onclick="showAbilityInfo(0)">
+                                <span>Ability A</span>
+                                <span>Ability A description</span>
+                            </div>
+                            <div class="ability" onclick="showAbilityInfo(1)">
+                                <span>Ability B</span>
+                                <span>Ability B description</span>
+                            </div>
+                            <div class="ability" onclick="showAbilityInfo(2)">
+                                <span>Ability C</span>
+                                <span>Ability C description</span>
+                            </div>
                         </div>
                     </div>
                 </div>
