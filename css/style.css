@@ -67,7 +67,7 @@ main{
     padding: 20px;
 }
 
-#pkmnImage{
+#pokeImageDiv{
     padding-bottom: 10px;
     flex: 2 1 300px;
     display: flex;
@@ -75,7 +75,7 @@ main{
     justify-content: space-between;
     flex-direction: column;
     background-image: url(../assets/habitats/mountain.png);
-    background-size: cover;
+    background-size: cover !important;
     background-position: center;
 }
 
@@ -129,7 +129,7 @@ main{
     list-style: none;
     margin: 0;
     line-height: 48px;
-    overflow: hidden;
+    overflow: visible;
 }
 
 #badges{
@@ -192,10 +192,10 @@ main{
     position: absolute;
     left: 0;
     top: 0;
-    transition: all .4s ease;
+    transition: width .4s ease;
 }
 
-.ability span:first-child{
+.ability span{
     font-weight: 700;
     height: 80px;
     line-height: 80px;
@@ -203,21 +203,22 @@ main{
     text-align: center;
     width: 100%;
     display: block;
+}
+
+.ability span:first-child{
     opacity: 1;
 }
 
 .ability span:nth-of-type(2){
-    display: block;
-    height: 80px;
-    text-align: justify;
-    padding: 10px;
-    font-size: 12px;
-    line-height: 12px;
     opacity: 0;
 }
 
 .invisible{
     display: none;
+}
+
+.opacity{
+    opacity: 0;
 }
 
 .clicked span:first-child{
@@ -374,7 +375,7 @@ details summary::-webkit-details-marker {
     flex-wrap: nowrap;
 }
 
-#searchBar textarea{
+#input{
     resize: none;
     height: 46px;
     line-height: 40px;
@@ -382,6 +383,7 @@ details summary::-webkit-details-marker {
 }
 
 #searchBar button{
+    cursor: pointer;
     border: none;
     padding: 15px;
     font-weight: 700;
@@ -390,7 +392,7 @@ details summary::-webkit-details-marker {
     height: 48px;
 }
 
-#searchBar textarea{
+#input{
     font-size: clamp(.7vw, 2vw, 1rem);
     height: 48px;
     flex: 6;
@@ -409,7 +411,7 @@ details summary::-webkit-details-marker {
 }
 
 .bar button{
-    padding: 15px 15px 15px 0 !important;
+    padding: 12px 15px 15px 0 !important;
     border-radius: 0 15px 15px 0;
 }
 
@@ -435,4 +437,26 @@ details summary::-webkit-details-marker {
     text-wrap: nowrap;
     border-radius: 10px;
     width: 100%;
+}
+
+#tooltip{
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: var(--secon);
+    transition: opacity .2s ease;
+}
+
+/* An empty content generates a triangle somehow... */
+#tooltip::after{
+    content:"";
+    position:absolute;
+    bottom:100%;
+    left:50%;
+    transform:translateX(-50%),;
+
+    border:10px solid transparent;
+    border-bottom-color:var(--secon);
 }

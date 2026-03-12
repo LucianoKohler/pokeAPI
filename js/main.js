@@ -2,7 +2,7 @@ pokemonState = "front_default";
 currentData = JSON.parse(localStorage.getItem(25))
 
 function capitalize(str){
-    words = str.split(" ");
+    words = str.split("-");
     finalWord = ""
     words.forEach((word) => {finalWord += word.charAt(0).toUpperCase() + word.slice(1) + " ";})
 
@@ -45,49 +45,100 @@ async function renderPokemon(id){
     currentID = id
     data = await getPokemonById(id);
     pokemonState = "front_default"
-    renderPokemonImage(data, pokemonState);
+    renderPokemonImage();
 
     // Locking/unlocking buttons
     changeButtonsAvailability()
 
     // Info-evo div
-    document.getElementById("pokeName").innerHTML = capitalize(data.data1.name);
-    document.getElementById("pokeNumber").innerHTML = "No° " + data.data1.id
-    document.getElementById("pokeDesc").innerHTML = (data.data2.flavor_text_entries[0].flavor_text).replace("\f", " ")
+    document.getElementById("pokeName").innerHTML = capitalize(currentData.data1.name);
+    document.getElementById("pokeNumber").innerHTML = "No° " + currentData.data1.id
+
+    let desc = await findFirstEnglishEntry(currentData.data2.flavor_text_entries)
+    
+    document.getElementById("pokeDesc").innerHTML = await desc.flavor_text.replace("\f", " ").replace("\n", " ")
 
     // Type and miscelaneous badges
     let types = currentData.data1.types
-    console.log(types)
     if(types.length == 1){
-        document.getElementById("badges").innerHTML = `<img src='./assets/types/${types[0].type.name}.png'>`
+        document.getElementById("badges").innerHTML = `
+        <img
+        src='./assets/types/${types[0].type.name}.png'
+        onmousemove="tooltip(event, 0)"
+        onmouseout="hideTooltip()">`
     }else{
         document.getElementById("badges").innerHTML = `
-        <img src='./assets/types/${types[0].type.name}.png'>
-        <img src='./assets/types/${types[1].type.name}.png'>`
+        <img
+        src='./assets/types/${types[0].type.name}.png'
+        onmousemove="tooltip(event, 0)"
+        onmouseout="hideTooltip()">
+        <img
+        src='./assets/types/${types[1].type.name}.png'
+        onmousemove="tooltip(event, 1)"
+        onmouseout="hideTooltip()">`
     }
 
     if(currentData.data2.is_legendary){
-        document.getElementById("badges").innerHTML += `<img src='./assets/icons/legendary.png'>`
+        document.getElementById("badges").innerHTML += `
+        <img 
+        src='./assets/icons/legendary.png'
+        onmousemove="tooltip(event, 2)"
+        onmouseout="hideTooltip()">`
     }
 
     if(currentData.data2.is_mythical){
-        document.getElementById("badges").innerHTML += `<img src='./assets/icons/mythical.png'>`
+        document.getElementById("badges").innerHTML += `
+        <img 
+        src='./assets/icons/mythical.png'
+        onmousemove="tooltip(event, 3)"
+        onmouseout="hideTooltip()">`
     }
 
     if(currentData.data2.is_baby){
-        document.getElementById("badges").innerHTML += `<img src='./assets/icons/baby.png'>`
+        document.getElementById("badges").innerHTML += `
+        <img 
+        src='./assets/icons/baby.png'
+        onmousemove="tooltip(event 4)"
+        onmouseout="hideTooltip()">`
     }
 
     if(currentData.data2.has_gender_differences){
-        document.getElementById("badges").innerHTML += `<img src='./assets/icons/gender_difference.png'>`
+        document.getElementById("badges").innerHTML += `
+        <img 
+        src='./assets/icons/gender_difference.png'
+        onmousemove="tooltip(event, 5)"
+        onmouseout="hideTooltip()">`
     }
     
 
     // Abilities
     let abilitiesData = currentData.data1.abilities
-    let abilitiesDiv = document.getElementById
+    let abilitiesDiv = document.getElementById("abilities")
+    abilitiesDiv.innerHTML = ""
+
     for(let i = 0; i < abilitiesData.length; i++){
 
+        // Accessing cache
+        if(localStorage.getItem("ability_" + abilitiesData[i].ability.name)){
+            console.log("cache da habilidade encontrado")
+        }else{
+            console.log("buscando habilidade na API")
+            let abilityFetch = await fetch(abilitiesData[i].ability.url)
+            abilityFetch = await abilityFetch.json()
+            localStorage.setItem("ability_" + abilitiesData[i].ability.name, JSON.stringify(abilityFetch.flavor_text_entries))
+        }
+
+        abilityDesc = await JSON.parse(localStorage.getItem("ability_" + abilitiesData[i].ability.name))
+
+        // Block of descriptions turns into a single english entry
+        abilityDesc = await findFirstEnglishEntry(abilityDesc)
+
+        // Creating the ability
+        abilitiesDiv.innerHTML += `
+            <div class="ability" onclick="showAbilityInfo(${i})">
+                <span>${capitalize(abilitiesData[i].ability.name).replace("-", " ")}</span>
+                <span>${abilityDesc.flavor_text}</span>
+            </div>`
     }
 
     // Stats
@@ -120,9 +171,18 @@ function changeButtonsAvailability(){
     }
 }
 
-async function renderPokemonImage(data = currentData, state){
-    img = await currentData.data1.sprites[state]
+async function renderPokemonImage(){
+    
+    if(currentData.data2.habitat == null){
+        background = `url(./assets/habitats/null.png)`
+    }else{
+        background = `url(./assets/habitats/${currentData.data2.habitat.name}.png)`
+    }
+
+    let img = currentData.data1.sprites[pokemonState]
+
     document.getElementById("PokeImage").src = img
+    document.getElementById("pokeImageDiv").style.background = background
 }
 
 async function renderPokemonStats(){
@@ -180,7 +240,7 @@ function changeImageState(action){
                 case "back_default":      pokemonState = "back_female"; break;
             }
     }
-    renderPokemonImage(undefined, pokemonState)
+    renderPokemonImage()
 }
 
 // Play pokémon's sound
@@ -208,4 +268,70 @@ function showAbilityInfo(divNum){
 
 }
 
+// Tooltip
+function tooltip(e, whatToShow){
+    let tooltip = document.getElementById("tooltip")
+    tooltip.classList.remove("opacity")
+
+    switch(whatToShow){
+        case 0: // pokémon's first Type
+            let content = currentData.data1.types[0].type.name
+            tooltip.innerHTML = `This is a <b><i>${content.toUpperCase()}</i></b> type pokémon!`
+            break
+        case 1: // Show pokémon Type
+            let content2 = currentData.data1.types[1].type.name
+            tooltip.innerHTML = `This is a <b><i>${content2.toUpperCase()}</i></b> type pokémon!`
+            break
+        case 2:
+            tooltip.innerHTML = "This is a <b><i>LEGENDARY</i></b> pokémon!"
+            break;
+        case 3:
+            tooltip.innerHTML = "This is a <b><i>MYTHICALv pokémon!"
+            break;
+        case 4:
+            tooltip.innerHTML = "This is a <b><i>BABY</i></b> pokémon!"
+            break;
+        case 5:
+            tooltip.innerHTML = "This pokémon has <b><i>gender differences!</i></b>"
+            break;
+        case 6:
+            tooltip.innerHTML = "Play pokémon sound"
+            break;
+        case 7:
+            tooltip.innerHTML = "Turn pokémon"
+            break;
+        case 8:
+            tooltip.innerHTML = "Show shiny version"
+            break;
+        case 9:
+            tooltip.innerHTML = "Swap gender"
+            break;
+        }
+
+
+    tooltip.style.transform =
+        `translate(calc(${e.clientX}px - 52%), ${e.clientY+30}px)`
+
+
+}
+
+// Used for finding an english description for pokémon's description and ability description
+async function findFirstEnglishEntry(data){
+    for(let i = 0; i < data.length; i++){
+        if(data[i].language.name == 'en'){
+            return data[i]
+        }
+    }
+    return "no english description found..."
+    
+}
+
+hideTooltip = () => {document.getElementById("tooltip").classList.add("opacity")}
+
+document.getElementById("input").addEventListener("keypress", (e) => {
+    if(e.key == "Enter"){
+        renderPokemon(document.getElementById("input").value)
+    }
+})
+document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
 renderPokemon(25)

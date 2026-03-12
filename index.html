@@ -10,16 +10,16 @@
 <body>
     <main>
         <div class="upper">
-            <div class="block" id="pkmnImage">
-                <img id="PokeImage" src="./assets/types/fighting.png" alt="" height="80%" width="80%">
+            <div class="block" id="pokeImageDiv">
+                <img id="PokeImage" src="./assets/types/unknown.png" alt="" height="80%" width="80%">
                 <div class="buttons">
                     <div class="">
-                        <img id="makeSound" onclick="makeSound()" height="32px" src="./assets/icons/sound.svg" alt="">
+                        <img onmousemove="tooltip(event, 6)" onmouseout="hideTooltip()" id="makeSound" onclick="makeSound()" height="32px" src="./assets/icons/sound.svg" alt="">
                     </div>
                     <div>
-                        <img id="rotatePokemon" onclick="changeImageState(1)" height="32px" src="./assets/icons/rotate.svg" alt="">
-                        <img id="makeShiny" onclick="changeImageState(2)" height="32px" src="./assets/icons/shiny.svg" alt="">
-                        <img id="changeGender" onclick="changeImageState(3)" height="32px" src="./assets/icons/gender.svg" alt="">
+                        <img onmousemove="tooltip(event, 7)" onmouseout="hideTooltip()" id="rotatePokemon" onclick="changeImageState(1)" height="32px" src="./assets/icons/rotate.svg" alt="">
+                        <img onmousemove="tooltip(event, 8)" onmouseout="hideTooltip()" id="makeShiny" onclick="changeImageState(2)" height="32px" src="./assets/icons/shiny.svg" alt="">
+                        <img onmousemove="tooltip(event, 9)" onmouseout="hideTooltip()" id="changeGender" onclick="changeImageState(3)" height="32px" src="./assets/icons/gender.svg" alt="">
                     </div>
                 </div>
             </div>
@@ -196,8 +196,8 @@
 
         <div id="searchBar">
             <div class="bar">
-                <textarea placeholder="Enter name or pokédex number" name="" id=""></textarea>
-                <button>
+                <input type="text" placeholder="Enter name or pokédex number" id="input">
+                <button id="search">
                     <img src="assets/icons/search.svg" alt="">
                 </button>
             </div>
@@ -210,6 +210,7 @@
             </div>
         </div>
     </main>
+    <div id="tooltip" class="opacity">testetestetestetestetestetestetesteteste</div>
     <script type="text/javascript" src="./js/main.js"></script>
 </body>
 </html>
