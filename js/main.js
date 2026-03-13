@@ -1,5 +1,17 @@
 pokemonState = "front_default";
 currentData = JSON.parse(localStorage.getItem(25))
+pokemonWeaknesses = {}
+types =
+["normal", "fighting", 
+ "flying", "poison", 
+ "ground", "rock", 
+ "bug", "ghost", 
+ "steel", "fire", 
+ "water", "grass", 
+ "electric", "psychic", 
+ "ice", "dragon", 
+ "dark", "fairy" ]
+
 
 function capitalize(str){
     words = str.split("-");
@@ -98,7 +110,7 @@ async function renderPokemon(id){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/baby.png'
-        onmousemove="tooltip(event 4)"
+        onmousemove="tooltip(event, 4)"
         onmouseout="hideTooltip()">`
     }
 
@@ -143,6 +155,9 @@ async function renderPokemon(id){
 
     // Stats
     renderPokemonStats();
+
+    // Weaknesses
+    calculatePokemonWeaknesses();
 
 };
 
@@ -286,7 +301,7 @@ function tooltip(e, whatToShow){
             tooltip.innerHTML = "This is a <b><i>LEGENDARY</i></b> pokémon!"
             break;
         case 3:
-            tooltip.innerHTML = "This is a <b><i>MYTHICALv pokémon!"
+            tooltip.innerHTML = "This is a <b><i>MYTHICAL</i></b> pokémon!"
             break;
         case 4:
             tooltip.innerHTML = "This is a <b><i>BABY</i></b> pokémon!"
@@ -315,6 +330,8 @@ function tooltip(e, whatToShow){
 
 }
 
+hideTooltip = () => {document.getElementById("tooltip").classList.add("opacity")}
+    
 // Used for finding an english description for pokémon's description and ability description
 async function findFirstEnglishEntry(data){
     for(let i = 0; i < data.length; i++){
@@ -326,7 +343,66 @@ async function findFirstEnglishEntry(data){
     
 }
 
-hideTooltip = () => {document.getElementById("tooltip").classList.add("opacity")}
+async function calculatePokemonWeaknesses(){
+    
+    // Finding cached or API fetched type 1
+    type1 = null
+    if(localStorage.getItem(`type_${currentData.data1.types[0].type.name}`)){
+        console.log("Cache do tipo 1 encontrado")
+        type1 = JSON.parse(localStorage.getItem(`type_${currentData.data1.types[0].type.name}`))
+    }else{
+        console.log("buscando tipo 1 na API")
+        type1 = await fetch(currentData.data1.types[0].type.url)
+        let type1Data = await type1.json()
+        localStorage.setItem(`type_${currentData.data1.types[0].type.name}`, JSON.stringify(type1Data.damage_relations))
+
+        type1 = type1Data.damage_relations
+    }
+
+    // Finding cached or API fetched type 2 (if exists)
+    type2 = null
+    if(currentData.data1.types.length > 1){
+            if(localStorage.getItem(`type_${currentData.data1.types[1].type.name}`)){
+            console.log("Cache do tipo 2 encontrado")
+            type2 = JSON.parse(localStorage.getItem(`type_${currentData.data1.types[1].type.name}`))
+        }else{
+            console.log("buscando tipo 2 na API")
+            type2 = await fetch(currentData.data1.types[1].type.url)
+            let type2Data = await type2.json()
+            localStorage.setItem(`type_${currentData.data1.types[1].type.name}`, JSON.stringify(type2Data.damage_relations))
+            
+            type2 = type2Data.damage_relations
+        }
+    }
+
+    // Clearing weaknesses table, then finding weaknesses, strengths and invulnerabilities of type 1
+    for(type of types)                       { pokemonWeaknesses[type] = 1; }
+    for(weakness of type1.double_damage_from){ pokemonWeaknesses[weakness.name] = 2; }
+    for(strength of type1.half_damage_from)  { pokemonWeaknesses[strength.name] = .5; }
+    for(inv of type1.no_damage_from)         { pokemonWeaknesses[strength.name] = 0; }
+
+
+    // Finding weaknesses, strengths and invulnerabilities of type 2 (if applicable)
+    if(type2){
+        for(weakness of type2.double_damage_from){ pokemonWeaknesses[weakness.name] *= 2; }
+        for(strength of type2.half_damage_from)  { pokemonWeaknesses[strength.name] *= .5; }
+        for(inv of type2.no_damage_from)         { pokemonWeaknesses[strength.name] *= 0; }
+    }
+
+    // Taking these data to the HTML table
+    let cells = document.querySelectorAll(".weaknessCell");
+    let i = 0;
+    for(cell of cells){
+        weakness = pokemonWeaknesses[types[i]]
+        cell.innerHTML = weakness
+        cell.className = `weaknessCell weakness_${weakness}`.replace("0.5", "05").replace("0.25", "025")
+        i++;
+    }
+}
+
+
+
+
 
 document.getElementById("input").addEventListener("keypress", (e) => {
     if(e.key == "Enter"){

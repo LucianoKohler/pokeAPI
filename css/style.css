@@ -311,11 +311,14 @@ table tr:not(:first-child):not(.weakness) th{
 }
 
 th{
-    text-size{
-        
-    }
-    padding: clamp(10px);
+    padding: 10px;
 }
+
+.weakness_2{   background-color: #0FD232; }
+.weakness_4{   background-color: #017d18; }
+.weakness_05{  background-color: #BB0000; }
+.weakness_025{ background-color: #660000; }
+.weakness_0{ background-color: #000000; color: white; }
 
 .weakness{
     background-color: var(--main);
