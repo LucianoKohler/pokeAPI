@@ -57,6 +57,8 @@ async function renderPokemon(id){
     currentID = id
     data = await getPokemonById(id);
     pokemonState = "front_default"
+    sound = await new Audio(currentData.data1.cries.latest)
+
     renderPokemonImage();
 
     // Locking/unlocking buttons
@@ -148,8 +150,8 @@ async function renderPokemon(id){
         // Creating the ability
         abilitiesDiv.innerHTML += `
             <div class="ability" onclick="showAbilityInfo(${i})">
-                <span>${capitalize(abilitiesData[i].ability.name).replace("-", " ")}</span>
-                <span>${abilityDesc.flavor_text}</span>
+                <span class="abilityName">${capitalize(abilitiesData[i].ability.name).replace("-", " ")}</span>
+                <span class="abilityDesc">${abilityDesc.flavor_text}</span>
             </div>`
     }
 
@@ -187,17 +189,9 @@ function changeButtonsAvailability(){
 }
 
 async function renderPokemonImage(){
-    
-    if(currentData.data2.habitat == null){
-        background = `url(./assets/habitats/null.png)`
-    }else{
-        background = `url(./assets/habitats/${currentData.data2.habitat.name}.png)`
-    }
-
     let img = currentData.data1.sprites[pokemonState]
 
     document.getElementById("PokeImage").src = img
-    document.getElementById("pokeImageDiv").style.background = background
 }
 
 async function renderPokemonStats(){
@@ -259,9 +253,12 @@ function changeImageState(action){
 }
 
 // Play pokémon's sound
-function makeSound(){
-    console.log("WIP")
-    console.log(sound)
+async function makeSound(){
+    let icon = document.getElementById("sound")
+    
+    icon.classList.add("playSound");
+    icon.addEventListener("animationend", ()=>{ icon.classList.remove("playSound") })
+    sound.play()
 }
 
 // All porpouse function
@@ -379,14 +376,14 @@ async function calculatePokemonWeaknesses(){
     for(type of types)                       { pokemonWeaknesses[type] = 1; }
     for(weakness of type1.double_damage_from){ pokemonWeaknesses[weakness.name] = 2; }
     for(strength of type1.half_damage_from)  { pokemonWeaknesses[strength.name] = .5; }
-    for(inv of type1.no_damage_from)         { pokemonWeaknesses[strength.name] = 0; }
+    for(inv of type1.no_damage_from)         { pokemonWeaknesses[inv.name] = 0; }
 
 
     // Finding weaknesses, strengths and invulnerabilities of type 2 (if applicable)
     if(type2){
         for(weakness of type2.double_damage_from){ pokemonWeaknesses[weakness.name] *= 2; }
         for(strength of type2.half_damage_from)  { pokemonWeaknesses[strength.name] *= .5; }
-        for(inv of type2.no_damage_from)         { pokemonWeaknesses[strength.name] *= 0; }
+        for(inv of type2.no_damage_from)         { pokemonWeaknesses[inv.name] *= 0; }
     }
 
     // Taking these data to the HTML table
@@ -400,6 +397,10 @@ async function calculatePokemonWeaknesses(){
     }
 }
 
+function prevNextPokemon(next){
+    renderPokemon(currentData.data1.id + next);
+}
+
 
 
 
@@ -410,4 +411,4 @@ document.getElementById("input").addEventListener("keypress", (e) => {
     }
 })
 document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
-renderPokemon(25)
+renderPokemon(1000)

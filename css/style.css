@@ -67,14 +67,19 @@ main{
     padding: 20px;
 }
 
+#PokeImage{
+    transform: translateY(20%);
+}
+
 #pokeImageDiv{
+    aspect-ratio: 1/1 !important;
     padding-bottom: 10px;
     flex: 2 1 300px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    background-image: url(../assets/habitats/mountain.png);
+    background-image: url(../assets/habitats/pokeframe.png), url(../assets/habitats/desert.png);
     background-size: cover !important;
     background-position: center;
 }
@@ -87,6 +92,20 @@ main{
 
 .buttons img{
     cursor: pointer;
+}
+
+.playSound{
+    animation-name: playSound;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes playSound {
+    10%{ transform: rotate(30deg); }
+    30%{ transform: rotate(-30deg);}
+    50%{ transform: rotate(30deg);}
+    70%{ transform: rotate(-30deg); }
+    90%{ transform: rotate(30deg);}
 }
 
 .disabled{
@@ -132,6 +151,12 @@ main{
     overflow: visible;
 }
 
+#pokeNumber{
+    font-style: italic;
+    font-weight: 700;
+    letter-spacing: 4px;
+}
+
 #badges{
     margin-left: 10px;
     display: flex;
@@ -172,44 +197,35 @@ main{
 }
 
 .ability{
-    padding: 0;
+    display: grid;
+    place-items: center;
+    padding: 0 10px;
     border-radius: 10px;
     flex: 1;
     background-color: var(--terc);
     overflow: hidden;
     height: 80px;
     cursor: pointer;
-    align-items:center;
-    justify-content:center;
-    position: relative;
 }
 
-.content{
-    transition: all 0.4;
+.abilityName, .abilityDesc{
+    grid-area: 1/1;
+    transition: opacity .1s ease-in;
+    text-align: center;
 }
 
-.ability span{
-    position: absolute;
-    left: 0;
-    top: 0;
-    transition: width .4s ease;
-}
-
-.ability span{
+.abilityName{
     font-weight: 700;
-    height: 80px;
     line-height: 80px;
     font-size: 20px;
-    text-align: center;
-    width: 100%;
-    display: block;
-}
-
-.ability span:first-child{
     opacity: 1;
 }
 
-.ability span:nth-of-type(2){
+.abilityDesc{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 16px;
     opacity: 0;
 }
 
@@ -221,11 +237,11 @@ main{
     opacity: 0;
 }
 
-.clicked span:first-child{
+.clicked .abilityName{
     opacity: 0;
 }
 
-.clicked span:nth-of-type(2){
+.clicked .abilityDesc{
     opacity: 1;
 }
 

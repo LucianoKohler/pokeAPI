@@ -11,10 +11,10 @@
     <main>
         <div class="upper">
             <div class="block" id="pokeImageDiv">
-                <img id="PokeImage" src="./assets/types/unknown.png" alt="" height="80%" width="80%">
+                <img id="PokeImage" src="./assets/types/unknown.png" alt="" height="70%" width="70%">
                 <div class="buttons">
                     <div class="">
-                        <img onmousemove="tooltip(event, 6)" onmouseout="hideTooltip()" id="makeSound" onclick="makeSound()" height="32px" src="./assets/icons/sound.svg" alt="">
+                        <img onmousemove="tooltip(event, 6)" onmouseout="hideTooltip()" id="sound" onclick="makeSound()" height="32px" src="./assets/icons/sound.svg" alt="">
                     </div>
                     <div>
                         <img onmousemove="tooltip(event, 7)" onmouseout="hideTooltip()" id="rotatePokemon" onclick="changeImageState(1)" height="32px" src="./assets/icons/rotate.svg" alt="">
@@ -45,16 +45,16 @@
                         <h2>Abilities</h2>
                         <div id="abilities">
                             <div class="ability" onclick="showAbilityInfo(0)">
-                                <span>Ability A</span>
-                                <span>Ability A description</span>
+                                <span class="abilityName">Ability A</span>
+                                <span class="abilityDesc">Ability A description</span>
                             </div>
                             <div class="ability" onclick="showAbilityInfo(1)">
-                                <span>Ability B</span>
-                                <span>Ability B description</span>
+                                <span class="abilityName">Ability B</span>
+                                <span class="abilityDesc">Ability B description</span>
                             </div>
                             <div class="ability" onclick="showAbilityInfo(2)">
-                                <span>Ability C</span>
-                                <span>Ability C description</span>
+                                <span class="abilityName">Ability C</span>
+                                <span class="abilityDesc">Ability C description</span>
                             </div>
                         </div>
                     </div>
@@ -74,12 +74,12 @@
                     </div>
                     <progress class="statBar" max="255" value="50"></progress>
                     <div>
-                        <span>Sp. Attack</span>
+                        <span>Defense</span>
                         <span class="stat">XX</span>
                     </div>
                     <progress class="statBar" max="255" value="50"></progress>
                     <div>
-                        <span>Defense</span>
+                        <span>Sp. Attack</span>
                         <span class="stat">XX</span>
                     </div>
                     <progress class="statBar" max="255" value="50"></progress>
@@ -101,8 +101,40 @@
             </div>
         </div>
         <div class="lower">
-            <div class="block" id="randomDiv">
-                <h2>Random div</h2>
+            <div class="block" id="moveset">
+                <h2>Moveset</h2>
+                <details class="move">
+                    <summary><h3>Blaze Kick</h3></summary>
+                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+                </details>
+                <details class="move">
+                    <summary><h3>Blaze Kick</h3></summary>
+                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+                </details>
+                <details class="move">
+                    <summary><h3>Blaze Kick</h3></summary>
+                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+                </details>
+                <details class="move">
+                    <summary><h3>Blaze Kick</h3></summary>
+                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+                </details>
+              <details class="move">
+                    <summary><h3>Blaze Kick</h3></summary>
+                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+                </details>
+              <details class="move">
+                    <summary><h3>Blaze Kick</h3></summary>
+                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+                </details>
+              <details class="move">
+                    <summary><h3>Blaze Kick</h3></summary>
+                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+                </details>
+              <details class="move">
+                    <summary><h3>Blaze Kick</h3></summary>
+                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+                </details>
             </div>
             <div class="block" id="weaknesses">
                 <h2>Weaknesses</h2>
@@ -157,40 +189,8 @@
                     </tr>
                 </table>
             </div>
-            <div class="block" id="moveset">
-                <h2>Moveset</h2>
-                <details class="move">
-                    <summary><h3>Blaze Kick</h3></summary>
-                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-                </details>
-                <details class="move">
-                    <summary><h3>Blaze Kick</h3></summary>
-                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-                </details>
-                <details class="move">
-                    <summary><h3>Blaze Kick</h3></summary>
-                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-                </details>
-                <details class="move">
-                    <summary><h3>Blaze Kick</h3></summary>
-                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-                </details>
-              <details class="move">
-                    <summary><h3>Blaze Kick</h3></summary>
-                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-                </details>
-              <details class="move">
-                    <summary><h3>Blaze Kick</h3></summary>
-                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-                </details>
-              <details class="move">
-                    <summary><h3>Blaze Kick</h3></summary>
-                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-                </details>
-              <details class="move">
-                    <summary><h3>Blaze Kick</h3></summary>
-                    <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-                </details>
+            <div class="block" id="randomDiv">
+                <h2>Miscelaneous Info</h2>
             </div>
         </div>
 
@@ -202,15 +202,15 @@
                 </button>
             </div>
             <div class="nextPrev">
-                <button><</button>
-                <button>></button>
+                <button onclick="prevNextPokemon(-1)"><</button>
+                <button onclick="prevNextPokemon(1)">></button>
             </div>
             <div class="fullList">
                 <button>Full List (WIP)</button>
             </div>
         </div>
     </main>
-    <div id="tooltip" class="opacity">testetestetestetestetestetestetesteteste</div>
+    <div id="tooltip" class="opacity">Tooltip (invisible)</div>
     <script type="text/javascript" src="./js/main.js"></script>
 </body>
 </html>
