@@ -158,8 +158,14 @@ async function renderPokemon(id){
     // Stats
     renderPokemonStats();
 
+    // Moveset
+    renderMoveset();
+
     // Weaknesses
-    calculatePokemonWeaknesses();
+    renderPokemonWeaknesses();
+
+    // Misc div
+    renderMiscDiv();
 
 };
 
@@ -340,7 +346,7 @@ async function findFirstEnglishEntry(data){
     
 }
 
-async function calculatePokemonWeaknesses(){
+async function renderPokemonWeaknesses(){
     
     // Finding cached or API fetched type 1
     type1 = null
@@ -401,7 +407,33 @@ function prevNextPokemon(next){
     renderPokemon(currentData.data1.id + next);
 }
 
+function renderMoveset(){
+    let moves = currentData.data1.moves;
+    let movesDiv = document.getElementById("moveset");
+    
+    for(move of moves){
+        movesDiv.innerHTML += `
+        <details class="move">
+            <summary><h3>${capitalize(move.move.name).replace("-", " ")}</h3></summary>
+            <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
+        </details>`        
+    }
 
+    // CONTINUARRRRRRRRR
+    // *****************
+    // *****************
+    // *****************
+    // *****************
+    // *****************
+    // *****************
+    // *****************
+}
+
+function renderMiscDiv(){
+    document.getElementById("pokeHeight").innerHTML = `${currentData.data1.height/10}m`
+    document.getElementById("pokeWeight").innerHTML = `${currentData.data1.weight/10}kg`
+    document.getElementById("pokeCatchRate").innerHTML = `${currentData.data2.capture_rate} (???)`
+}
 
 
 

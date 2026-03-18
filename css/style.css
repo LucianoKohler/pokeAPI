@@ -79,7 +79,7 @@ main{
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    background-image: url(../assets/habitats/pokeframe.png), url(../assets/habitats/desert.png);
+    background-image: url(../assets/habitats/pokeframe.png), url(../assets/habitats/night.png);
     background-size: cover !important;
     background-position: center;
 }
@@ -379,6 +379,33 @@ details summary::-webkit-details-marker {
 
 .move[open] summary::after{
     transform: rotate(180deg);
+}
+
+#misc{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#misc hr{
+    width: 100%;
+    border-color: var(--terc);
+}
+
+.miscUpper, .miscLower{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.miscUpper{ height: 80px; }
+.miscLower{ height: 160px; }
+
+.miscUpper div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 #searchBar{
