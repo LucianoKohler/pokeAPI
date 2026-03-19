@@ -198,6 +198,43 @@ async function renderPokemonImage(){
     let img = currentData.data1.sprites[pokemonState]
 
     document.getElementById("PokeImage").src = img
+
+    let backgroundDiv = document.getElementById("pokeImageDiv");
+    let currentBackground;
+/*
+"normal", "fighting", 
+ "flying", "poison", 
+ "ground", "rock", 
+ "bug", "ghost", 
+ "steel", "fire", 
+ "water", "grass", 
+ "electric", "psychic", 
+ "ice", "dragon", 
+ "dark", "fairy" 
+*/
+    switch(currentData.data1.types[0].type.name){
+        case 'normal':   background = 'forest'; break;
+        case 'grass':    background = 'forest'; break;
+        case 'bug':      background = 'forest'; break;
+        case 'fighting': background = 'desert'; break;
+        case 'ground':   background = 'desert'; break;
+        case 'rock':     background = 'desert'; break;
+        case 'fire':     background = 'desert'; break;
+        case 'steel':    background = 'lab'; break;
+        case 'electric': background = 'lab'; break;
+        case 'water':    background = 'sea'; break;
+        case 'ice':      background = 'sea'; break;
+        case 'psychic':  background = 'peak'; break;
+        case 'fairy':    background = 'peak'; break;
+        case 'dragon':   background = 'sky'; break;
+        case 'flying':   background = 'sky'; break;
+        case 'dark':     background = 'night'; break;
+        case 'poison':   background = 'night'; break;
+        case 'ghost':    background = 'night'; break;
+        default:         background = 'forest';
+    }
+
+    backgroundDiv.style.background = `url(../assets/habitats/pokeframe.png), url(../assets/habitats/${background}.png)`
 }
 
 async function renderPokemonStats(){
@@ -407,9 +444,10 @@ function prevNextPokemon(next){
     renderPokemon(currentData.data1.id + next);
 }
 
-function renderMoveset(){
-    let moves = currentData.data1.moves;
+async function renderMoveset(){
+    let moves = await currentData.data1.moves;
     let movesDiv = document.getElementById("moveset");
+    movesDiv.innerHTML = "<h2>Moveset</h2>";
     
     for(move of moves){
         movesDiv.innerHTML += `
@@ -432,7 +470,17 @@ function renderMoveset(){
 function renderMiscDiv(){
     document.getElementById("pokeHeight").innerHTML = `${currentData.data1.height/10}m`
     document.getElementById("pokeWeight").innerHTML = `${currentData.data1.weight/10}kg`
-    document.getElementById("pokeCatchRate").innerHTML = `${currentData.data2.capture_rate} (???)`
+
+    let difficultyString = "";
+    let difficulty = currentData.data2.capture_rate;
+
+    if    (difficulty >= 190){ difficultyString = "Easy";              }
+    else if(difficulty >= 90){ difficultyString = "Medium";            }
+    else if(difficulty >= 30){ difficultyString = "Hard";              }
+    else{                      difficultyString = "Almost Impossible"; }
+    document.getElementById("pokeCatchRate").innerHTML = 
+    `${currentData.data2.capture_rate}
+    <span class="${difficultyString}">(${difficultyString})</span>`
 }
 
 
@@ -443,4 +491,4 @@ document.getElementById("input").addEventListener("keypress", (e) => {
     }
 })
 document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
-renderPokemon(1000)
+renderPokemon(20)

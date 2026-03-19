@@ -408,6 +408,32 @@ details summary::-webkit-details-marker {
     align-items: center;
 }
 
+.miscLower{
+    flex-direction: column;
+    text-align: center;
+}
+
+#forms{
+    height: 120px;
+    display: flex;
+}
+
+.form{
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form img{
+    height: 100px;
+    text-wrap: wrap;
+}
+
+.Easy {font-weight: 700; color: rgb(114, 252, 114);}
+.Medium {font-weight: 700; color: rgb(255, 187, 0);}
+.Hard {font-weight: 700; color: rgb(209, 12, 52);}
+.Almost {font-weight: 700; color: rgb(125, 4, 125);} /* Almost Impossible */
+
 #searchBar{
     position: sticky;
     bottom: 0;
