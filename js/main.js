@@ -1,5 +1,6 @@
 pokemonState = "front_default";
-currentData = JSON.parse(localStorage.getItem(25))
+pokeData = {}
+pokeSpeciesData = {}
 pokemonWeaknesses = {}
 types =
 ["normal", "fighting", 
@@ -12,6 +13,29 @@ types =
  "ice", "dragon", 
  "dark", "fairy" ]
 
+ async function getObject(obj, id){
+    let data;
+    if(localStorage.getItem(`${obj}_${id}`)){
+        console.log("cache do " + obj + " encontrado!");
+        data = JSON.parse(localStorage.getItem(`${obj}_${id}`))
+    }else{
+        console.log("buscando " + obj + " na API");
+        let dataFetch = await fetch(`https://pokeapi.co/api/v2/${obj}/${id}`)
+        data = await dataFetch.json();
+
+        try{
+            localStorage.setItem(`${obj}_${id}`, JSON.stringify(data));
+        }catch(e){
+            if(e == "QuotaExceededError"){
+                console.log("LS cheio, limpando!");
+                localStorage.clear()
+                localStorage.setItem(`${obj}_${id}`, JSON.stringify(data));
+            }
+        }
+    }
+
+    return data;
+ }
 
 function capitalize(str){
     words = str.split("-");
@@ -21,43 +45,12 @@ function capitalize(str){
     return finalWord
 }
 
-
-async function getPokemonById(id){
-    // Cache
-    if(localStorage.getItem(id)) {
-        console.log("cache encontrado");
-        currentData = JSON.parse(localStorage.getItem(id))
-        return JSON.parse(localStorage.getItem(id));
-    }
-
-    console.log("Buscando da API")
-    const apiFetch = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    const data1 = await apiFetch.json();
-
-    const flavorTextFetch = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-    const data2 = await flavorTextFetch.json();
-
-    try{
-        localStorage.setItem(id, JSON.stringify({data1, data2}));
-    }catch (e){
-        if(e.name == "QuotaExceededError"){
-            console.log("LS cheio, limpando!");
-            localStorage.clear()
-            localStorage.setItem(id, JSON.stringify({data1, data2}));
-        }else{
-            throw e;
-        }
-    }
-    currentData = {data1, data2}
-
-    return {data1, data2}
-}
-
 async function renderPokemon(id){
     currentID = id
-    data = await getPokemonById(id);
+    pokeData = await getObject("pokemon", id);
+    pokeSpeciesData = await getObject("pokemon-species", id);
     pokemonState = "front_default"
-    sound = await new Audio(currentData.data1.cries.latest)
+    sound = await new Audio(pokeData.cries.latest)
 
     renderPokemonImage();
 
@@ -65,15 +58,15 @@ async function renderPokemon(id){
     changeButtonsAvailability()
 
     // Info-evo div
-    document.getElementById("pokeName").innerHTML = capitalize(currentData.data1.name);
-    document.getElementById("pokeNumber").innerHTML = "No° " + currentData.data1.id
+    document.getElementById("pokeName").innerHTML = capitalize(pokeData.name);
+    document.getElementById("pokeNumber").innerHTML = "No° " + pokeData.id
 
-    let desc = await findFirstEnglishEntry(currentData.data2.flavor_text_entries)
+    let desc = await findFirstEnglishEntry(pokeSpeciesData.flavor_text_entries)
     
     document.getElementById("pokeDesc").innerHTML = await desc.flavor_text.replace("\f", " ").replace("\n", " ")
 
     // Type and miscelaneous badges
-    let types = currentData.data1.types
+    let types = pokeData.types
     if(types.length == 1){
         document.getElementById("badges").innerHTML = `
         <img
@@ -92,7 +85,7 @@ async function renderPokemon(id){
         onmouseout="hideTooltip()">`
     }
 
-    if(currentData.data2.is_legendary){
+    if(pokeSpeciesData.is_legendary){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/legendary.png'
@@ -100,7 +93,7 @@ async function renderPokemon(id){
         onmouseout="hideTooltip()">`
     }
 
-    if(currentData.data2.is_mythical){
+    if(pokeSpeciesData.is_mythical){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/mythical.png'
@@ -108,7 +101,7 @@ async function renderPokemon(id){
         onmouseout="hideTooltip()">`
     }
 
-    if(currentData.data2.is_baby){
+    if(pokeSpeciesData.is_baby){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/baby.png'
@@ -116,7 +109,7 @@ async function renderPokemon(id){
         onmouseout="hideTooltip()">`
     }
 
-    if(currentData.data2.has_gender_differences){
+    if(pokeSpeciesData.has_gender_differences){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/gender_difference.png'
@@ -126,26 +119,15 @@ async function renderPokemon(id){
     
 
     // Abilities
-    let abilitiesData = currentData.data1.abilities
+    let abilitiesData = pokeData.abilities
     let abilitiesDiv = document.getElementById("abilities")
     abilitiesDiv.innerHTML = ""
 
     for(let i = 0; i < abilitiesData.length; i++){
-
-        // Accessing cache
-        if(localStorage.getItem("ability_" + abilitiesData[i].ability.name)){
-            console.log("cache da habilidade encontrado")
-        }else{
-            console.log("buscando habilidade na API")
-            let abilityFetch = await fetch(abilitiesData[i].ability.url)
-            abilityFetch = await abilityFetch.json()
-            localStorage.setItem("ability_" + abilitiesData[i].ability.name, JSON.stringify(abilityFetch.flavor_text_entries))
-        }
-
-        abilityDesc = await JSON.parse(localStorage.getItem("ability_" + abilitiesData[i].ability.name))
+        abilityDesc = await getObject("ability", abilitiesData[i].ability.name);
 
         // Block of descriptions turns into a single english entry
-        abilityDesc = await findFirstEnglishEntry(abilityDesc)
+        abilityDesc = await findFirstEnglishEntry(abilityDesc.flavor_text_entries)
 
         // Creating the ability
         abilitiesDiv.innerHTML += `
@@ -171,21 +153,21 @@ async function renderPokemon(id){
 
 // Makes the buttons under the pokémon image clickable or not depending if there are images accordingly
 function changeButtonsAvailability(){
-    if(currentData.data1.sprites["back_default"] == null){
+    if(pokeData.sprites["back_default"] == null){
         document.getElementById("rotatePokemon").onclick = "";
         document.getElementById("rotatePokemon").classList.add("disabled")
     }else{
         document.getElementById("rotatePokemon").onclick = () => changeImageState(1);
         document.getElementById("rotatePokemon").classList.remove("disabled")
     }
-    if(currentData.data1.sprites["front_shiny"] == null){
+    if(pokeData.sprites["front_shiny"] == null){
         document.getElementById("makeShiny").classList.add("disabled")
         document.getElementById("makeShiny").onclick = "";
     }else{
         document.getElementById("makeShiny").onclick = () => changeImageState(2);
         document.getElementById("makeShiny").classList.remove("disabled")
     }
-    if(currentData.data1.sprites["front_female"] == null){
+    if(pokeData.sprites["front_female"] == null){
         document.getElementById("changeGender").classList.add("disabled")
         document.getElementById("changeGender").onclick = "";
     }else{
@@ -195,24 +177,14 @@ function changeButtonsAvailability(){
 }
 
 async function renderPokemonImage(){
-    let img = currentData.data1.sprites[pokemonState]
+    let img = pokeData.sprites[pokemonState]
 
     document.getElementById("PokeImage").src = img
 
     let backgroundDiv = document.getElementById("pokeImageDiv");
-    let currentBackground;
-/*
-"normal", "fighting", 
- "flying", "poison", 
- "ground", "rock", 
- "bug", "ghost", 
- "steel", "fire", 
- "water", "grass", 
- "electric", "psychic", 
- "ice", "dragon", 
- "dark", "fairy" 
-*/
-    switch(currentData.data1.types[0].type.name){
+    let background;
+
+    switch(pokeData.types[0].type.name){
         case 'normal':   background = 'forest'; break;
         case 'grass':    background = 'forest'; break;
         case 'bug':      background = 'forest'; break;
@@ -234,11 +206,11 @@ async function renderPokemonImage(){
         default:         background = 'forest';
     }
 
-    backgroundDiv.style.background = `url(../assets/habitats/pokeframe.png), url(../assets/habitats/${background}.png)`
+    backgroundDiv.style.background = `url(./assets/habitats/pokeframe.png), url(./assets/habitats/${background}.png)`
 }
 
 async function renderPokemonStats(){
-    statsData = currentData.data1.stats
+    statsData = pokeData.stats
     sum = 0;
 
     stats = document.querySelectorAll(".stat")
@@ -304,12 +276,6 @@ async function makeSound(){
     sound.play()
 }
 
-// All porpouse function
-async function getFromAPI(query, id){
-    const apiFetch = await fetch(`https://pokeapi.co/api/v2/${query}/${id}`);
-    const data = await apiFetch.json();
-}
-
 function showAbilityInfo(divNum){
     let abilities = document.querySelectorAll(".ability")
 
@@ -330,11 +296,11 @@ function tooltip(e, whatToShow){
 
     switch(whatToShow){
         case 0: // pokémon's first Type
-            let content = currentData.data1.types[0].type.name
+            let content = pokeData.types[0].type.name
             tooltip.innerHTML = `This is a <b><i>${content.toUpperCase()}</i></b> type pokémon!`
             break
         case 1: // Show pokémon Type
-            let content2 = currentData.data1.types[1].type.name
+            let content2 = pokeData.types[1].type.name
             tooltip.innerHTML = `This is a <b><i>${content2.toUpperCase()}</i></b> type pokémon!`
             break
         case 2:
@@ -386,33 +352,14 @@ async function findFirstEnglishEntry(data){
 async function renderPokemonWeaknesses(){
     
     // Finding cached or API fetched type 1
-    type1 = null
-    if(localStorage.getItem(`type_${currentData.data1.types[0].type.name}`)){
-        console.log("Cache do tipo 1 encontrado")
-        type1 = JSON.parse(localStorage.getItem(`type_${currentData.data1.types[0].type.name}`))
-    }else{
-        console.log("buscando tipo 1 na API")
-        type1 = await fetch(currentData.data1.types[0].type.url)
-        let type1Data = await type1.json()
-        localStorage.setItem(`type_${currentData.data1.types[0].type.name}`, JSON.stringify(type1Data.damage_relations))
-
-        type1 = type1Data.damage_relations
-    }
+    type1 = await getObject("type", pokeData.types[0].type.name)
+    type1 = type1.damage_relations
 
     // Finding cached or API fetched type 2 (if exists)
     type2 = null
-    if(currentData.data1.types.length > 1){
-            if(localStorage.getItem(`type_${currentData.data1.types[1].type.name}`)){
-            console.log("Cache do tipo 2 encontrado")
-            type2 = JSON.parse(localStorage.getItem(`type_${currentData.data1.types[1].type.name}`))
-        }else{
-            console.log("buscando tipo 2 na API")
-            type2 = await fetch(currentData.data1.types[1].type.url)
-            let type2Data = await type2.json()
-            localStorage.setItem(`type_${currentData.data1.types[1].type.name}`, JSON.stringify(type2Data.damage_relations))
-            
-            type2 = type2Data.damage_relations
-        }
+    if(pokeData.types.length > 1){
+        type2 = await getObject("type", pokeData.types[1].type.name)
+        type2 = type2.damage_relations
     }
 
     // Clearing weaknesses table, then finding weaknesses, strengths and invulnerabilities of type 1
@@ -441,20 +388,39 @@ async function renderPokemonWeaknesses(){
 }
 
 function prevNextPokemon(next){
-    renderPokemon(currentData.data1.id + next);
+    renderPokemon(pokeData.id + next);
 }
 
 async function renderMoveset(){
-    let moves = await currentData.data1.moves;
-    let movesDiv = document.getElementById("moveset");
-    movesDiv.innerHTML = "<h2>Moveset</h2>";
+    let moves = await pokeData.moves;
+    let movesDiv = document.getElementById("moves");
+    movesDiv.innerHTML = "";
     
     for(move of moves){
         movesDiv.innerHTML += `
-        <details class="move">
+        <details class="move" id = "${move.move.name}">
             <summary><h3>${capitalize(move.move.name).replace("-", " ")}</h3></summary>
-            <span>Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum</span>
-        </details>`        
+            <div class="moveContent">
+                <div id="moveArchetype">
+                    <img src="assets/moveArchetypes/physical.png">
+                    <b>Physical</b>
+                </div>
+                <hr>
+                <div id="moveStats">
+                    <span class="moveStat">Pow: --</span>
+                    <span class="moveStat">Acc: --</span>
+                    <span class="moveStat">PP : --</span>
+                </div>
+                <hr>
+                <div id="moveMisc">
+                    <span id="learnMethod">Learned Via <br><b>???</b></span>
+                    <div>
+                        Type: <img id="moveType" src="assets/types/no_type.png">
+                    </div>
+                </div>
+            </div>
+            <div id="moveDesc">Attack description</div>
+        </details>`
     }
 
     // CONTINUARRRRRRRRR
@@ -468,19 +434,41 @@ async function renderMoveset(){
 }
 
 function renderMiscDiv(){
-    document.getElementById("pokeHeight").innerHTML = `${currentData.data1.height/10}m`
-    document.getElementById("pokeWeight").innerHTML = `${currentData.data1.weight/10}kg`
+    document.getElementById("pokeHeight").innerHTML = `${pokeData.height/10}m`
+    document.getElementById("pokeWeight").innerHTML = `${pokeData.weight/10}kg`
 
     let difficultyString = "";
-    let difficulty = currentData.data2.capture_rate;
+    let difficulty = pokeSpeciesData.capture_rate;
 
     if    (difficulty >= 190){ difficultyString = "Easy";              }
     else if(difficulty >= 90){ difficultyString = "Medium";            }
     else if(difficulty >= 30){ difficultyString = "Hard";              }
     else{                      difficultyString = "Almost Impossible"; }
     document.getElementById("pokeCatchRate").innerHTML = 
-    `${currentData.data2.capture_rate}
+    `${pokeSpeciesData.capture_rate}
     <span class="${difficultyString}">(${difficultyString})</span>`
+
+    // Other forms
+    let otherFormsDiv = document.getElementById("forms");
+    let otherForms = pokeSpeciesData.varieties
+    otherFormsDiv.innerHTML = ""
+    otherFormsDiv.classList = ""
+
+    if(otherForms.length == 1){
+        otherFormsDiv.innerHTML = "This pokémon does not have any other forms"
+    }else{
+        for(let i = 1; i < otherForms.length; i++){ // 1 cuz 0 is default form
+                let imgID = (otherForms[i].pokemon.url).split("/")[6];
+
+            otherFormsDiv.innerHTML += `
+                <div class="form">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${imgID}.png" alt="">
+                    ${capitalize(otherForms[i].pokemon.name).replace("-", " ")}
+                </div>`
+        }
+    }
+
+    if(otherForms.length <= 3){ otherFormsDiv.classList = "centered"; }
 }
 
 
@@ -491,4 +479,4 @@ document.getElementById("input").addEventListener("keypress", (e) => {
     }
 })
 document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
-renderPokemon(20)
+renderPokemon(772)

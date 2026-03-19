@@ -22,13 +22,10 @@ h2{
     margin: 0px 0px 10px 0px;
     line-height: 28px;
     overflow: hidden;
-}
-
-h2{
     text-align: center;
     font-size: 35px;
+    overflow: visible;
 }
-
 
 html{
     height: 100%;
@@ -148,7 +145,6 @@ main{
     list-style: none;
     margin: 0;
     line-height: 48px;
-    overflow: visible;
 }
 
 #pokeNumber{
@@ -210,7 +206,6 @@ main{
 
 .abilityName, .abilityDesc{
     grid-area: 1/1;
-    transition: opacity .1s ease-in;
     text-align: center;
 }
 
@@ -298,7 +293,7 @@ progress::-moz-progress-bar{
     transition: width 0.2s ease, background-color 0.2s ease;
 }
 
-#randomDiv{
+#miscDiv{
     flex: 2 1 300px;
     display: flex;
     flex-direction: column;
@@ -341,19 +336,20 @@ th{
 }
 
 #moveset{
-    flex: 5 1 350px;
-    overflow-y: scroll;
+    flex: 3 1 250px;
     max-height: 350px;
+    overflow: hidden;
 }
 
-::-webkit-scrollbar {
-    display: none;
+#moves{
+    height: 280px;
+    overflow-y: scroll;
+    padding-right: 5px;
 }
-
 .move{
     background-color: var(--terc);
     width: 100%;
-    padding: 12px;
+    padding: 10px 20px;
     margin-top: 10px;
     border-radius: 20px;
 }
@@ -377,19 +373,81 @@ details summary::-webkit-details-marker {
     line-height: 16px;
 }
 
-.move[open] summary::after{
+.move[open] summary::aftefr{
     transform: rotate(180deg);
+}
+
+.moveContent{
+    display: flex;
+    gap: 0 10px;
+}
+
+#moveArchetype{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+#moveStats{
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+    justify-content: center;
+    gap: 5px;
+}
+
+.moveStat{
+    font-family: monospace;
+    font-size: clamp(10px, 16px, 20px);
+    text-wrap: nowrap;
+}
+
+#moveMisc{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex: 2;
+}
+
+#learnMethod{
+    text-align: center;
+}
+
+#moveType{
+    height: 40px;
+}
+
+#moveMisc div{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#moveArchetype img{
+    height: 60px;
+}
+
+#moveDesc{
+    text-align: center;
 }
 
 #misc{
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    height: 100%;
 }
 
 #misc hr{
     width: 100%;
-    border-color: var(--terc);
+    height: 5px;
+    background-color: var(--terc);
+    border-radius: 5px;
+    border: none;
 }
 
 .miscUpper, .miscLower{
@@ -416,16 +474,43 @@ details summary::-webkit-details-marker {
 #forms{
     height: 120px;
     display: flex;
+    justify-content: start;
+    align-items: center;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    gap: 8px;
+}
+
+.centered{
+    display: flex;
+    justify-content: center !important;
+}
+
+::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+}
+
+ 
+::-webkit-scrollbar-thumb {
+    background: #888; 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555; 
 }
 
 .form{
     height: 120px;
+    min-width: 120px;
     display: flex;
     flex-direction: column;
+    line-height: 14px;
 }
 
 .form img{
-    height: 100px;
+    height: 80px;
     text-wrap: wrap;
 }
 
@@ -441,7 +526,7 @@ details summary::-webkit-details-marker {
     max-width: 100%;
     background-color: var(--terc);
     border-radius: 20px 20px 0 0;
-    padding: 10px;
+    padding: 10px 10px 15px 10px;
     display: flex;
     gap: 10px;
     flex-wrap: nowrap;
