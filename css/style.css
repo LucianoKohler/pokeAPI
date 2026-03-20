@@ -121,8 +121,8 @@ main{
     content:url("../assets/icons/gender_disabled.svg");
 }
 
-#info-evo{
-    flex: 5 1 350px;
+#pokeInfo{
+    flex: 6 1 350px;
     background-color: transparent;
     display: flex;
     flex-direction: column;
@@ -211,8 +211,6 @@ main{
 
 .abilityName{
     font-weight: 700;
-    line-height: 80px;
-    font-size: 20px;
     opacity: 1;
 }
 
@@ -222,6 +220,7 @@ main{
     justify-content: center;
     line-height: 16px;
     opacity: 0;
+    overflow: hidden;
 }
 
 .invisible{
@@ -343,9 +342,12 @@ th{
 
 #moves{
     height: 280px;
-    overflow-y: scroll;
-    padding-right: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-align: center;
+    padding-right: 10px;
 }
+
 .move{
     background-color: var(--terc);
     width: 100%;
@@ -432,7 +434,9 @@ details summary::-webkit-details-marker {
 }
 
 .moveDesc{
-    text-align: center;
+    padding-top: 5px;
+    text-align: justify;
+    line-height: 16px;
 }
 
 #misc{
@@ -476,6 +480,7 @@ details summary::-webkit-details-marker {
     display: flex;
     justify-content: start;
     align-items: center;
+    text-align: center;
     overflow-x: scroll;
     overflow-y: hidden;
     gap: 8px;

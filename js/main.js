@@ -13,6 +13,7 @@ types =
  "ice", "dragon", 
  "dark", "fairy" ]
 
+ // Most important function, gets anything from the API, caches, and returns it.
  async function getObject(obj, id){
     let data;
     if(localStorage.getItem(`${obj}_${id}`)){
@@ -35,37 +36,84 @@ types =
     }
 
     return data;
- }
+}
 
+// Auxiliary all-porpouse function
 function capitalize(str){
     words = str.split("-");
     finalWord = ""
     words.forEach((word) => {finalWord += word.charAt(0).toUpperCase() + word.slice(1) + " ";})
 
-    return finalWord
+    return finalWord;
 }
 
+// Main function
 async function renderPokemon(id){
-    currentID = id
     pokeData = await getObject("pokemon", id);
     pokeSpeciesData = await getObject("pokemon-species", id);
     pokemonState = "front_default"
-    sound = await new Audio(pokeData.cries.latest)
+    sound = new Audio(pokeData.cries.latest)
 
-    renderPokemonImage();
+    // Pokemon Image
+    renderImage();
 
-    // Locking/unlocking buttons
+    // Locking/unlocking buttons on image div
     changeButtonsAvailability()
 
-    // Info-evo div
+    // PokeInfo div
     document.getElementById("pokeName").innerHTML = capitalize(pokeData.name);
-    document.getElementById("pokeNumber").innerHTML = "No° " + pokeData.id
+    document.getElementById("pokeNumber").innerHTML = "No° " + pokeData.id;
 
+    // Pokémon description
     let desc = await findFirstEnglishEntry(pokeSpeciesData.flavor_text_entries)
-    
     document.getElementById("pokeDesc").innerHTML = await desc.flavor_text.replace("\f", " ").replace("\n", " ")
 
     // Type and miscelaneous badges
+    renderTypeBadges();
+
+    // Abilities
+    renderAbilities();
+
+    // Stats
+    renderStats();
+
+    // Moveset
+    renderMoveset();
+
+    // Weaknesses
+    renderWeaknesses();
+
+    // Misc div
+    renderMiscDiv();
+
+};
+
+// Makes the buttons under the pokémon image clickable or not depending if there are images accordingly
+function changeButtonsAvailability(){
+    if(pokeData.sprites["back_default"] == null){
+        document.getElementById("rotatePokemon").onclick = "";
+        document.getElementById("rotatePokemon").classList.add("disabled")
+    }else{
+        document.getElementById("rotatePokemon").onclick = () => changeImageState(1);
+        document.getElementById("rotatePokemon").classList.remove("disabled")
+    }
+    if(pokeData.sprites["front_shiny"] == null){
+        document.getElementById("makeShiny").classList.add("disabled")
+        document.getElementById("makeShiny").onclick = "";
+    }else{
+        document.getElementById("makeShiny").onclick = () => changeImageState(2);
+        document.getElementById("makeShiny").classList.remove("disabled")
+    }
+    if(pokeData.sprites["front_female"] == null){
+        document.getElementById("changeGender").classList.add("disabled")
+        document.getElementById("changeGender").onclick = "";
+    }else{
+        document.getElementById("changeGender").onclick =() => changeImageState(3);
+        document.getElementById("changeGender").classList.remove("disabled")
+    }
+}
+
+async function renderTypeBadges(){
     let types = pokeData.types
     if(types.length == 1){
         document.getElementById("badges").innerHTML = `
@@ -116,9 +164,9 @@ async function renderPokemon(id){
         onmousemove="tooltip(event, 5)"
         onmouseout="hideTooltip()">`
     }
-    
+}
 
-    // Abilities
+async function renderAbilities(){
     let abilitiesData = pokeData.abilities
     let abilitiesDiv = document.getElementById("abilities")
     abilitiesDiv.innerHTML = ""
@@ -136,47 +184,9 @@ async function renderPokemon(id){
                 <span class="abilityDesc">${abilityDesc.flavor_text}</span>
             </div>`
     }
-
-    // Stats
-    renderPokemonStats();
-
-    // Moveset
-    renderMoveset();
-
-    // Weaknesses
-    renderPokemonWeaknesses();
-
-    // Misc div
-    renderMiscDiv();
-
-};
-
-// Makes the buttons under the pokémon image clickable or not depending if there are images accordingly
-function changeButtonsAvailability(){
-    if(pokeData.sprites["back_default"] == null){
-        document.getElementById("rotatePokemon").onclick = "";
-        document.getElementById("rotatePokemon").classList.add("disabled")
-    }else{
-        document.getElementById("rotatePokemon").onclick = () => changeImageState(1);
-        document.getElementById("rotatePokemon").classList.remove("disabled")
-    }
-    if(pokeData.sprites["front_shiny"] == null){
-        document.getElementById("makeShiny").classList.add("disabled")
-        document.getElementById("makeShiny").onclick = "";
-    }else{
-        document.getElementById("makeShiny").onclick = () => changeImageState(2);
-        document.getElementById("makeShiny").classList.remove("disabled")
-    }
-    if(pokeData.sprites["front_female"] == null){
-        document.getElementById("changeGender").classList.add("disabled")
-        document.getElementById("changeGender").onclick = "";
-    }else{
-        document.getElementById("changeGender").onclick =() => changeImageState(3);
-        document.getElementById("changeGender").classList.remove("disabled")
-    }
 }
 
-async function renderPokemonImage(){
+async function renderImage(){
     let img = pokeData.sprites[pokemonState]
 
     document.getElementById("PokeImage").src = img
@@ -209,7 +219,7 @@ async function renderPokemonImage(){
     backgroundDiv.style.background = `url(./assets/habitats/pokeframe.png), url(./assets/habitats/${background}.png)`
 }
 
-async function renderPokemonStats(){
+async function renderStats(){
     statsData = pokeData.stats
     sum = 0;
 
@@ -264,7 +274,7 @@ function changeImageState(action){
                 case "back_default":      pokemonState = "back_female"; break;
             }
     }
-    renderPokemonImage()
+    renderImage()
 }
 
 // Play pokémon's sound
@@ -349,7 +359,7 @@ async function findFirstEnglishEntry(data){
     
 }
 
-async function renderPokemonWeaknesses(){
+async function renderWeaknesses(){
     
     // Finding cached or API fetched type 1
     type1 = await getObject("type", pokeData.types[0].type.name)
@@ -404,7 +414,7 @@ async function renderMoveset(){
             <summary><h3>${capitalize(move).replace("-", " ")}</h3></summary>
             <div class="moveContent">
                 <div class="moveArchetype">
-                    <img src="assets/moveArchetypes/physical.png">
+                    <img src="assets/types/unknown.png">
                     <b>Physical</b>
                 </div>
                 <hr>
@@ -504,7 +514,7 @@ function renderMiscDiv(){
 
             otherFormsDiv.innerHTML += `
                 <div class="form">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${imgID}.png" alt="">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${imgID}.png" onerror='this.src="./assets/types/unknown.png"'>
                     ${capitalize(otherForms[i].pokemon.name).replace("-", " ")}
                 </div>`
         }
@@ -521,4 +531,3 @@ document.getElementById("input").addEventListener("keypress", (e) => {
     }
 })
 document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
-renderPokemon(772)
