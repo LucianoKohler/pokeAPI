@@ -396,31 +396,35 @@ async function renderMoveset(){
     let movesDiv = document.getElementById("moves");
     movesDiv.innerHTML = "";
     
+    let i = 0;
     for(move of moves){
+        move = move.move.name
         movesDiv.innerHTML += `
-        <details class="move" id = "${move.move.name}">
-            <summary><h3>${capitalize(move.move.name).replace("-", " ")}</h3></summary>
+        <details data-number=${i} onclick ="renderMove('${move}')" class="move" id = "${move}">
+            <summary><h3>${capitalize(move).replace("-", " ")}</h3></summary>
             <div class="moveContent">
-                <div id="moveArchetype">
+                <div class="moveArchetype">
                     <img src="assets/moveArchetypes/physical.png">
                     <b>Physical</b>
                 </div>
                 <hr>
-                <div id="moveStats">
+                <div class="moveStats">
                     <span class="moveStat">Pow: --</span>
                     <span class="moveStat">Acc: --</span>
                     <span class="moveStat">PP : --</span>
                 </div>
                 <hr>
-                <div id="moveMisc">
-                    <span id="learnMethod">Learned Via <br><b>???</b></span>
+                <div class="moveMisc">
+                    <span class="learnMethod">Learned Via <br><b>???</b></span>
                     <div>
-                        Type: <img id="moveType" src="assets/types/no_type.png">
+                        Type: <img class="moveType" src="assets/types/no_type.png">
                     </div>
                 </div>
             </div>
-            <div id="moveDesc">Attack description</div>
+            <div class="moveDesc">Attack description</div>
         </details>`
+
+        i++;
     }
 
     // CONTINUARRRRRRRRR
@@ -431,6 +435,44 @@ async function renderMoveset(){
     // *****************
     // *****************
     // *****************
+}
+
+async function renderMove(moveID){
+    let moveDiv = document.getElementById(moveID)
+    if(moveDiv.classList.contains("rendered")) return;
+
+    moveDiv.classList.add("rendered");
+    let move = await getObject("move", moveID);
+
+    // Archetype image
+    moveDiv.getElementsByClassName("moveArchetype")[0].children[0].src = `./assets/moveArchetypes/${move.damage_class.name}.png`
+    moveDiv.getElementsByClassName("moveArchetype")[0].children[1].innerHTML = capitalize(move.damage_class.name)
+
+    // Move Stats
+    let pow = move.power;
+    if(pow == undefined) pow = "--";
+
+    let acc = move.accuracy;
+    if(acc == undefined) acc = "--";
+    
+    let pp = move.pp;
+    if(pp == undefined) pp = "--";
+
+    moveDiv.getElementsByClassName("moveStats")[0].children[0].innerHTML = "Pow:  " + pow;
+    moveDiv.getElementsByClassName("moveStats")[0].children[1].innerHTML = "Acc:  " + acc;
+    moveDiv.getElementsByClassName("moveStats")[0].children[2].innerHTML = "PP :  " + pp;
+
+    // Misc stats
+    let learnMethod = pokeData.moves[moveDiv.dataset.number].version_group_details[0].move_learn_method.name;
+    moveDiv.getElementsByClassName("learnMethod")[0].innerHTML = `Learned Via <br><b>${capitalize(learnMethod).replace("-", " ")}</b>`;
+
+    let moveType = move.type.name;
+    moveDiv.getElementsByClassName("moveType")[0].src = `./assets/types/${moveType}.png`
+
+    // Move description
+    let moveDesc = await findFirstEnglishEntry(move.flavor_text_entries);
+    console.log(moveDesc)
+    moveDiv.getElementsByClassName("moveDesc")[0].innerHTML = moveDesc.flavor_text;
 }
 
 function renderMiscDiv(){

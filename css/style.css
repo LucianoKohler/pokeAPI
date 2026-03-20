@@ -382,7 +382,7 @@ details summary::-webkit-details-marker {
     gap: 0 10px;
 }
 
-#moveArchetype{
+.moveArchetype{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -390,7 +390,7 @@ details summary::-webkit-details-marker {
     flex: 1;
 }
 
-#moveStats{
+.moveStats{
     display: flex;
     flex-direction: column;
     flex: 2;
@@ -404,7 +404,7 @@ details summary::-webkit-details-marker {
     text-wrap: nowrap;
 }
 
-#moveMisc{
+.moveMisc{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -413,25 +413,25 @@ details summary::-webkit-details-marker {
     flex: 2;
 }
 
-#learnMethod{
+.learnMethod{
     text-align: center;
 }
 
-#moveType{
+.moveType{
     height: 40px;
 }
 
-#moveMisc div{
+.moveMisc div{
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
-#moveArchetype img{
+.moveArchetype img{
     height: 60px;
 }
 
-#moveDesc{
+.moveDesc{
     text-align: center;
 }
 
