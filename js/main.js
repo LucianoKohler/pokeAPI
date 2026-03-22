@@ -134,17 +134,17 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML = `
         <img
         src='./assets/types/${types[0].type.name}.png'
-        onmousemove="tooltip(event, 0)"
+        onmouseenter="tooltip(event, 0)"
         onmouseout="hideTooltip()">`
     }else{
         document.getElementById("badges").innerHTML = `
         <img
         src='./assets/types/${types[0].type.name}.png'
-        onmousemove="tooltip(event, 0)"
+        onmouseenter="tooltip(event, 0)"
         onmouseout="hideTooltip()">
         <img
         src='./assets/types/${types[1].type.name}.png'
-        onmousemove="tooltip(event, 1)"
+        onmouseenter="tooltip(event, 1)"
         onmouseout="hideTooltip()">`
     }
 
@@ -152,7 +152,7 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/legendary.png'
-        onmousemove="tooltip(event, 2)"
+        onmouseenter="tooltip(event, 2)"
         onmouseout="hideTooltip()">`
     }
 
@@ -160,7 +160,7 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/mythical.png'
-        onmousemove="tooltip(event, 3)"
+        onmouseenter="tooltip(event, 3)"
         onmouseout="hideTooltip()">`
     }
 
@@ -168,7 +168,7 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/baby.png'
-        onmousemove="tooltip(event, 4)"
+        onmouseenter="tooltip(event, 4)"
         onmouseout="hideTooltip()">`
     }
 
@@ -176,7 +176,7 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/gender_difference.png'
-        onmousemove="tooltip(event, 5)"
+        onmouseenter="tooltip(event, 5)"
         onmouseout="hideTooltip()">`
     }
 }
@@ -314,10 +314,9 @@ function showAbilityInfo(divNum){
 
 }
 
-// Tooltip
-function tooltip(e, whatToShow){
+// Tooltip, misc is for showing a move's type
+function tooltip(e, whatToShow, misc = ""){
     let tooltip = document.getElementById("tooltip")
-    tooltip.classList.remove("opacity")
 
     switch(whatToShow){
         case 0: // pokémon's first Type
@@ -352,13 +351,22 @@ function tooltip(e, whatToShow){
         case 9:
             tooltip.innerHTML = "Swap gender"
             break;
+        case 10:
+            tooltip.innerHTML = `<b><i>${capitalize(misc)}</i></b>`;
+            break;
         }
 
+        // Get where to put the tooltip, calculate it and move tooltip to it
+        let targetArea = e.currentTarget.getBoundingClientRect();
+        let tooltipArea = tooltip.getBoundingClientRect();
 
-    tooltip.style.transform =
-        `translate(calc(${e.clientX}px - 52%), ${e.clientY+30}px)`
+        let left = targetArea.left + targetArea.width / 2 - tooltipArea.width/2;
+        let top = targetArea.bottom + 10
 
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
 
+    tooltip.classList.remove("opacity");
 }
 
 hideTooltip = () => {document.getElementById("tooltip").classList.add("opacity")}
@@ -436,7 +444,6 @@ async function loadMoves(event) {
     let i;
     for(i = moveOffset; i < moveOffset+20; i++){
         if(i == moves.length){
-            console.log("fim");
             moveOffset = i;
             return;
         }
@@ -500,7 +507,10 @@ async function renderMove(moveID){
     moveDiv.getElementsByClassName("learnMethod")[0].innerHTML = `Learned Via <br><b>${capitalize(learnMethod).replace("-", " ")}</b>`;
 
     let moveType = move.type.name;
+    console.log(moveDiv.getElementsByClassName("moveType")[0])
     moveDiv.getElementsByClassName("moveType")[0].src = `./assets/types/${moveType}.png`
+    moveDiv.getElementsByClassName("moveType")[0].onmouseenter = () => tooltip(event, 10, moveType);
+    moveDiv.getElementsByClassName("moveType")[0].onmouseout = () => hideTooltip();
 
     // Move description
     let moveDesc = await findFirstEnglishEntry(move.flavor_text_entries);
@@ -552,3 +562,6 @@ document.getElementById("input").addEventListener("keypress", (e) => {
     }
 })
 document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
+
+renderPokemon(723);
+// renderPokemon(Math.floor(Math.random()*1025) + 1);
