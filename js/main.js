@@ -63,8 +63,13 @@ function capitalize(str){
 
 // Main function
 async function renderPokemon(id){
-    pokeData = await getObject("pokemon", id);
-    pokeSpeciesData = await getObject("pokemon-species", id);
+    let pokeDataFetch = await getObject("pokemon", id);
+    let pokeSpeciesFetch = await getObject("pokemon-species", id);
+    if(!pokeDataFetch || !pokeSpeciesFetch){ window.alert("Deu ruim aqui serjão"); return; }
+
+    pokeData = pokeDataFetch;
+    pokeSpeciesData = pokeSpeciesFetch;
+    
     pokemonState = "front_default"
     sound = new Audio(pokeData.cries.latest)
     moveOffset = 0;
@@ -507,14 +512,12 @@ async function renderMove(moveID){
     moveDiv.getElementsByClassName("learnMethod")[0].innerHTML = `Learned Via <br><b>${capitalize(learnMethod).replace("-", " ")}</b>`;
 
     let moveType = move.type.name;
-    console.log(moveDiv.getElementsByClassName("moveType")[0])
     moveDiv.getElementsByClassName("moveType")[0].src = `./assets/types/${moveType}.png`
     moveDiv.getElementsByClassName("moveType")[0].onmouseenter = () => tooltip(event, 10, moveType);
     moveDiv.getElementsByClassName("moveType")[0].onmouseout = () => hideTooltip();
 
     // Move description
     let moveDesc = await findFirstEnglishEntry(move.flavor_text_entries);
-    console.log(moveDesc)
     moveDiv.getElementsByClassName("moveDesc")[0].innerHTML = moveDesc.flavor_text;
 }
 
