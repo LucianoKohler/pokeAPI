@@ -12,6 +12,8 @@ types =
  "electric", "psychic", 
  "ice", "dragon", 
  "dark", "fairy" ]
+moveOffset = 0;
+
 
  // Most important function, gets anything from the API, caches, and returns it.
  async function getObject(obj, id){
@@ -65,6 +67,7 @@ async function renderPokemon(id){
     pokeSpeciesData = await getObject("pokemon-species", id);
     pokemonState = "front_default"
     sound = new Audio(pokeData.cries.latest)
+    moveOffset = 0;
 
     // Pokemon Image
     renderImage();
@@ -414,13 +417,31 @@ function prevNextPokemon(next){
 }
 
 async function renderMoveset(){
-    let moves = await pokeData.moves;
     let movesDiv = document.getElementById("moves");
     movesDiv.innerHTML = "";
     
-    let i = 0;
-    for(move of moves){
-        move = move.move.name
+    
+    let event = movesDiv.addEventListener("scroll", () => {
+        if(movesDiv.scrollHeight - movesDiv.scrollTop == movesDiv.clientHeight){
+            loadMoves();
+        }
+    })
+    loadMoves(event);
+
+}
+
+async function loadMoves(event) {
+    let moves = await pokeData.moves;
+    let movesDiv = document.getElementById("moves");
+    let i;
+    for(i = moveOffset; i < moveOffset+20; i++){
+        if(i == moves.length){
+            console.log("fim");
+            moveOffset = i;
+            return;
+        }
+        
+        let move = moves[i].move.name;
         movesDiv.innerHTML += `
         <details data-number=${i} onclick ="renderMove('${move}')" class="move" id = "${move}">
             <summary><h3>${capitalize(move).replace("-", " ")}</h3></summary>
@@ -445,18 +466,8 @@ async function renderMoveset(){
             </div>
             <div class="moveDesc">Attack description</div>
         </details>`
-
-        i++;
     }
-
-    // CONTINUARRRRRRRRR
-    // *****************
-    // *****************
-    // *****************
-    // *****************
-    // *****************
-    // *****************
-    // *****************
+    moveOffset+=20;
 }
 
 async function renderMove(moveID){
@@ -534,8 +545,6 @@ function renderMiscDiv(){
 
     if(otherForms.length <= 3){ otherFormsDiv.classList = "centered"; }
 }
-
-
 
 document.getElementById("input").addEventListener("keypress", (e) => {
     if(e.key == "Enter"){
