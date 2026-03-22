@@ -21,7 +21,19 @@ types =
         data = JSON.parse(localStorage.getItem(`${obj}_${id}`))
     }else{
         console.log("buscando " + obj + " na API");
-        let dataFetch = await fetch(`https://pokeapi.co/api/v2/${obj}/${id}`)
+        let dataFetch;
+        try{
+            dataFetch = await fetch(`https://pokeapi.co/api/v2/${obj}/${id}`)
+            if(!dataFetch.ok){
+                console.log("erro na busca");
+                return;
+            }
+
+        }catch(e){
+            console.log("Erro: " + e);
+            return;
+        }
+        
         data = await dataFetch.json();
 
         try{
@@ -362,7 +374,7 @@ async function findFirstEnglishEntry(data){
 async function renderWeaknesses(){
     
     // Finding cached or API fetched type 1
-    type1 = await getObject("type", pokeData.types[0].type.name)
+    type1 = await getObject("type", pokeData.types[0].type.name);
     type1 = type1.damage_relations
 
     // Finding cached or API fetched type 2 (if exists)

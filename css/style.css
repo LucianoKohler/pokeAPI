@@ -76,7 +76,7 @@ main{
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    background-image: url(../assets/habitats/pokeframe.png), url(../assets/habitats/night.png);
+    background-image: url(../assets/habitats/pokeframe.png), url(../assets/habitats/peak.png);
     background-size: cover !important;
     background-position: center;
 }
@@ -537,13 +537,6 @@ details summary::-webkit-details-marker {
     flex-wrap: nowrap;
 }
 
-#input{
-    resize: none;
-    height: 46px;
-    line-height: 40px;
-    padding-left: 10px;
-}
-
 #searchBar button{
     cursor: pointer;
     border: none;
@@ -555,7 +548,8 @@ details summary::-webkit-details-marker {
 }
 
 #input{
-    font-size: clamp(.7vw, 2vw, 1rem);
+    font-size: clamp(12px, 16px, 20px);
+    padding-left: 10px;
     height: 48px;
     flex: 6;
     font-style: italic;
@@ -601,7 +595,7 @@ details summary::-webkit-details-marker {
     width: 100%;
 }
 
-#tooltip{
+#tooltip, #errorPopup{
     position: absolute;
     top: 0;
     left: 0;
