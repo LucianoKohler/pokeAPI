@@ -12,6 +12,8 @@ types =
  "electric", "psychic", 
  "ice", "dragon", 
  "dark", "fairy" ]
+moveOffset = 0;
+
 
  // Most important function, gets anything from the API, caches, and returns it.
  async function getObject(obj, id){
@@ -21,7 +23,19 @@ types =
         data = JSON.parse(localStorage.getItem(`${obj}_${id}`))
     }else{
         console.log("buscando " + obj + " na API");
-        let dataFetch = await fetch(`https://pokeapi.co/api/v2/${obj}/${id}`)
+        let dataFetch;
+        try{
+            dataFetch = await fetch(`https://pokeapi.co/api/v2/${obj}/${id}`)
+            if(!dataFetch.ok){
+                console.log("erro na busca");
+                return;
+            }
+
+        }catch(e){
+            console.log("Erro: " + e);
+            return;
+        }
+        
         data = await dataFetch.json();
 
         try{
@@ -49,10 +63,16 @@ function capitalize(str){
 
 // Main function
 async function renderPokemon(id){
-    pokeData = await getObject("pokemon", id);
-    pokeSpeciesData = await getObject("pokemon-species", id);
+    let pokeDataFetch = await getObject("pokemon", id);
+    let pokeSpeciesFetch = await getObject("pokemon-species", id);
+    if(!pokeDataFetch || !pokeSpeciesFetch){ window.alert("Deu ruim aqui serjão"); return; }
+
+    pokeData = pokeDataFetch;
+    pokeSpeciesData = pokeSpeciesFetch;
+    
     pokemonState = "front_default"
     sound = new Audio(pokeData.cries.latest)
+    moveOffset = 0;
 
     // Pokemon Image
     renderImage();
@@ -119,17 +139,17 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML = `
         <img
         src='./assets/types/${types[0].type.name}.png'
-        onmousemove="tooltip(event, 0)"
+        onmouseenter="tooltip(event, 0)"
         onmouseout="hideTooltip()">`
     }else{
         document.getElementById("badges").innerHTML = `
         <img
         src='./assets/types/${types[0].type.name}.png'
-        onmousemove="tooltip(event, 0)"
+        onmouseenter="tooltip(event, 0)"
         onmouseout="hideTooltip()">
         <img
         src='./assets/types/${types[1].type.name}.png'
-        onmousemove="tooltip(event, 1)"
+        onmouseenter="tooltip(event, 1)"
         onmouseout="hideTooltip()">`
     }
 
@@ -137,7 +157,7 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/legendary.png'
-        onmousemove="tooltip(event, 2)"
+        onmouseenter="tooltip(event, 2)"
         onmouseout="hideTooltip()">`
     }
 
@@ -145,7 +165,7 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/mythical.png'
-        onmousemove="tooltip(event, 3)"
+        onmouseenter="tooltip(event, 3)"
         onmouseout="hideTooltip()">`
     }
 
@@ -153,7 +173,7 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/baby.png'
-        onmousemove="tooltip(event, 4)"
+        onmouseenter="tooltip(event, 4)"
         onmouseout="hideTooltip()">`
     }
 
@@ -161,7 +181,7 @@ async function renderTypeBadges(){
         document.getElementById("badges").innerHTML += `
         <img 
         src='./assets/icons/gender_difference.png'
-        onmousemove="tooltip(event, 5)"
+        onmouseenter="tooltip(event, 5)"
         onmouseout="hideTooltip()">`
     }
 }
@@ -299,10 +319,9 @@ function showAbilityInfo(divNum){
 
 }
 
-// Tooltip
-function tooltip(e, whatToShow){
+// Tooltip, misc is for showing a move's type
+function tooltip(e, whatToShow, misc = ""){
     let tooltip = document.getElementById("tooltip")
-    tooltip.classList.remove("opacity")
 
     switch(whatToShow){
         case 0: // pokémon's first Type
@@ -337,13 +356,22 @@ function tooltip(e, whatToShow){
         case 9:
             tooltip.innerHTML = "Swap gender"
             break;
+        case 10:
+            tooltip.innerHTML = `<b><i>${capitalize(misc)}</i></b>`;
+            break;
         }
 
+        // Get where to put the tooltip, calculate it and move tooltip to it
+        let targetArea = e.currentTarget.getBoundingClientRect();
+        let tooltipArea = tooltip.getBoundingClientRect();
 
-    tooltip.style.transform =
-        `translate(calc(${e.clientX}px - 52%), ${e.clientY+30}px)`
+        let left = targetArea.left + targetArea.width / 2 - tooltipArea.width/2;
+        let top = targetArea.bottom + 10
 
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
 
+    tooltip.classList.remove("opacity");
 }
 
 hideTooltip = () => {document.getElementById("tooltip").classList.add("opacity")}
@@ -362,7 +390,7 @@ async function findFirstEnglishEntry(data){
 async function renderWeaknesses(){
     
     // Finding cached or API fetched type 1
-    type1 = await getObject("type", pokeData.types[0].type.name)
+    type1 = await getObject("type", pokeData.types[0].type.name);
     type1 = type1.damage_relations
 
     // Finding cached or API fetched type 2 (if exists)
@@ -402,13 +430,30 @@ function prevNextPokemon(next){
 }
 
 async function renderMoveset(){
-    let moves = await pokeData.moves;
     let movesDiv = document.getElementById("moves");
     movesDiv.innerHTML = "";
     
-    let i = 0;
-    for(move of moves){
-        move = move.move.name
+    
+    let event = movesDiv.addEventListener("scroll", () => {
+        if(movesDiv.scrollHeight - movesDiv.scrollTop == movesDiv.clientHeight){
+            loadMoves();
+        }
+    })
+    loadMoves(event);
+
+}
+
+async function loadMoves(event) {
+    let moves = await pokeData.moves;
+    let movesDiv = document.getElementById("moves");
+    let i;
+    for(i = moveOffset; i < moveOffset+20; i++){
+        if(i == moves.length){
+            moveOffset = i;
+            return;
+        }
+        
+        let move = moves[i].move.name;
         movesDiv.innerHTML += `
         <details data-number=${i} onclick ="renderMove('${move}')" class="move" id = "${move}">
             <summary><h3>${capitalize(move).replace("-", " ")}</h3></summary>
@@ -433,18 +478,8 @@ async function renderMoveset(){
             </div>
             <div class="moveDesc">Attack description</div>
         </details>`
-
-        i++;
     }
-
-    // CONTINUARRRRRRRRR
-    // *****************
-    // *****************
-    // *****************
-    // *****************
-    // *****************
-    // *****************
-    // *****************
+    moveOffset+=20;
 }
 
 async function renderMove(moveID){
@@ -478,10 +513,11 @@ async function renderMove(moveID){
 
     let moveType = move.type.name;
     moveDiv.getElementsByClassName("moveType")[0].src = `./assets/types/${moveType}.png`
+    moveDiv.getElementsByClassName("moveType")[0].onmouseenter = () => tooltip(event, 10, moveType);
+    moveDiv.getElementsByClassName("moveType")[0].onmouseout = () => hideTooltip();
 
     // Move description
     let moveDesc = await findFirstEnglishEntry(move.flavor_text_entries);
-    console.log(moveDesc)
     moveDiv.getElementsByClassName("moveDesc")[0].innerHTML = moveDesc.flavor_text;
 }
 
@@ -523,11 +559,12 @@ function renderMiscDiv(){
     if(otherForms.length <= 3){ otherFormsDiv.classList = "centered"; }
 }
 
-
-
 document.getElementById("input").addEventListener("keypress", (e) => {
     if(e.key == "Enter"){
         renderPokemon(document.getElementById("input").value)
     }
 })
 document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
+
+renderPokemon(723);
+// renderPokemon(Math.floor(Math.random()*1025) + 1);
