@@ -323,7 +323,7 @@ table tr:not(:first-child):not(.weakness) th{
 }
 
 th{
-    padding: 10px;
+    padding: clamp(5px, 1vw, 10px);
 }
 
 .weakness_2{   background-color: #0FD232; }
@@ -383,7 +383,11 @@ details summary::-webkit-details-marker {
 
 .moveContent{
     display: flex;
-    gap: 0 10px;
+    gap: 0 clamp(5px, 1vw,10px);
+}
+
+.moveContent hr{
+    border-color: var(--terc);
 }
 
 .moveArchetype{
@@ -419,6 +423,7 @@ details summary::-webkit-details-marker {
 
 .learnMethod{
     text-align: center;
+    line-height: 16px;
 }
 
 .moveType{
@@ -432,7 +437,7 @@ details summary::-webkit-details-marker {
 }
 
 .moveArchetype img{
-    height: 60px;
+    height: clamp(30px, 5vw, 60px);
 }
 
 .moveDesc{
@@ -535,14 +540,15 @@ details summary::-webkit-details-marker {
     border-radius: 20px 20px 0 0;
     padding: 10px 10px 15px 10px;
     display: flex;
-    gap: 10px;
+    justify-content: space-evenly;
+    gap: 5px;
     flex-wrap: nowrap;
 }
 
 #searchBar button{
     cursor: pointer;
     border: none;
-    padding: 15px;
+    padding: clamp(5px, 10px, 20px);
     font-weight: 700;
     line-height: 16px;
     background-color: white;
@@ -574,8 +580,10 @@ details summary::-webkit-details-marker {
 }
 
 .nextPrev{
+    display: flex;
+    gap: 3px;
+    flex-wrap: nowrap;
     flex: 1 1;
-    width: 20%;
 }
 
 .nextPrev button:nth-of-type(1){
@@ -588,11 +596,12 @@ details summary::-webkit-details-marker {
 
 .fullList, .RandomPokemon{
     width: 15%;
+    flex: 1 1;
 }
 
 .fullList button, .RandomPokemon button{
     padding: 0 !important;
-    font-size: clamp(12px, 16px, 16px);
+    font-size: clamp(10px, 1.5vw, 16px);
     text-wrap: wrap;
     border-radius: 10px;
     width: 100%;
