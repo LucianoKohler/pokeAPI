@@ -2,6 +2,7 @@ pokemonState = "front_default";
 pokeData = {}
 pokeSpeciesData = {}
 pokemonWeaknesses = {}
+renderCooldown = 0;
 types =
 ["normal", "fighting", 
  "flying", "poison", 
@@ -63,9 +64,13 @@ function capitalize(str){
 
 // Main function
 async function renderPokemon(id){
+    if(renderCooldown){ return; }
+    renderCooldown = 1;
+    setTimeout(() => {renderCooldown = 0; console.log("cooldown zerado")}, 2000);
+
     let pokeDataFetch = await getObject("pokemon", id);
     let pokeSpeciesFetch = await getObject("pokemon-species", id);
-    if(!pokeDataFetch || !pokeSpeciesFetch){ window.alert("Deu ruim aqui serjão"); return; }
+    if(!pokeDataFetch || !pokeSpeciesFetch){ window.alert("Erro 404, nenhum pokémon encontrado com tal nome"); return; }
 
     pokeData = pokeDataFetch;
     pokeSpeciesData = pokeSpeciesFetch;
