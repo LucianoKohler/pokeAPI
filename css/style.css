@@ -2,6 +2,7 @@
     --main: #DDDDDD;
     --secon: #AAAAAA;
     --terc: #888888;
+    --quad: #555555;
 }
 
 @font-face {
@@ -39,6 +40,7 @@ body{
 }
 
 main{
+    padding-top: 20px;
     width: 100%;
     max-width: 1400px;
     display: flex;
@@ -48,7 +50,7 @@ main{
 }
 
 .upper, .lower{
-    padding: 20px 20px 0 20px;
+    padding: 0px 20px 20px 20px;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -65,12 +67,13 @@ main{
 
 #PokeImage{
     transform: translateY(20%);
+    image-rendering: pixelated;
 }
 
 #pokeImageDiv{
     aspect-ratio: 1/1 !important;
     padding-bottom: 10px;
-    height: 375px;
+    height: clamp(275px, 80vw, 375px);
     flex: none;
     display: flex;
     align-items: center;
@@ -297,6 +300,7 @@ progress::-moz-progress-bar{
     flex: 2 1 300px;
     display: flex;
     flex-direction: column;
+    padding-bottom: 0 !important;
 }
 
 h3{
@@ -364,6 +368,10 @@ th{
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+details{
+    transition: all .5 ease;
 }
 
 details summary::-webkit-details-marker {
@@ -482,21 +490,19 @@ details summary::-webkit-details-marker {
 }
 
 #forms{
-    height: 120px;
+    height: 140px;
     width: 100%;
     display: flex;
     flex-direction: row;
     text-align: center;
+    gap: 10px;
     overflow-x: auto;
     overflow-y: hidden;
 }
 
-#forms > *{
-    flex: 0 1 auto;
-}
-
 .centered{
     display: flex;
+    align-items: center;
     justify-content: center !important;
 }
 
@@ -517,7 +523,7 @@ details summary::-webkit-details-marker {
 
 .form{
     height: 120px;
-    min-width: 120px;
+    min-width: 100px;
     display: flex;
     flex-direction: column;
     line-height: 14px;
@@ -532,20 +538,38 @@ details summary::-webkit-details-marker {
 .Medium {font-weight: 700; color: rgb(255, 187, 0);}
 .Hard {font-weight: 700; color: rgb(209, 12, 52);}
 .Almost {font-weight: 700; color: rgb(125, 4, 125);} /* Almost Impossible */
-
+ 
 #searchBar{
-    position: sticky;
+    position: fixed;
     bottom: 0;
     width: 900px;
     max-width: 100%;
-    background-color: var(--terc);
+    background-color: var(--quad);
     border-radius: 20px 20px 0 0;
-    padding: 10px 10px 15px 10px;
+    padding: 10px;
     display: flex;
     justify-content: space-evenly;
     gap: 5px;
     flex-wrap: nowrap;
+    transition: transform .5s ease;
 }
+
+#barHandle{
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--quad);
+    padding: 10px 50px;
+    border-radius: 10px 10px 0 0;
+    position: absolute;
+    bottom: 65px;
+    left: 10px;
+    transition: transform .5s ease;
+}
+
+#barHandleContent{ transition: transform .5s ease;}
+
+#searchBar.hidden{transform: translateY(70px);}
+#barHandleContent.hidden{transform: rotate(180deg);}   
 
 #searchBar button{
     cursor: pointer;
@@ -570,6 +594,15 @@ details summary::-webkit-details-marker {
     border: none;
     text-wrap: nowrap;
 }
+
+.loading{
+    background-image: url(../assets/icons/loading.gif); 
+    background-size: 40px;
+    background-position: left;
+    background-repeat: no-repeat;
+}
+
+.noPokemonFound::placeholder{ color: red; }
 
 .bar{
     display: flex;
@@ -609,7 +642,7 @@ details summary::-webkit-details-marker {
     width: 100%;
 }
 
-#tooltip, #errorPopup{
+#tooltip{
     position: fixed;
     border-radius: 20px;
     padding: 10px;

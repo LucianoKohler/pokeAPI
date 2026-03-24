@@ -35,6 +35,7 @@ aliases = {
     "aegislash": "aegislash-shield",
     "pumpkaboo": "pumpkaboo-average",
     "gourgeist": "gourgeist-average",
+    "zygarde" : "zygarde-50",
     "lycanroc" : "lycanroc-midday",
     "wishiwashi" : "wishiwashi-solo",
     "minior" : "minior-red-meteor",
@@ -104,8 +105,14 @@ function capitalize(str){
 async function renderPokemon(id){
     if(renderCooldown){ return; }
     renderCooldown = 1;
-    setTimeout(() => {renderCooldown = 0; console.log("cooldown zerado")}, 2000);
+    setTimeout(() => { renderCooldown = 0; console.log("cooldown zerado") }, 1000);
 
+    let input = document.getElementById("input")
+    input.classList.add("loading")
+    input.placeholder = ""
+    input.blur();
+    input.value = ""
+    
     id = id.toString().toLowerCase();
     let pokeDataFetch;
     if(aliases[id]){
@@ -114,7 +121,27 @@ async function renderPokemon(id){
         pokeDataFetch = await getObject("pokemon", id);
     }
     let pokeSpeciesFetch = await getObject("pokemon-species", id);
-    if(!pokeDataFetch || !pokeSpeciesFetch){ window.alert("Erro 404, nenhum pokémon encontrado com tal nome"); return; }
+
+    // If a problem is found
+    if(!pokeDataFetch || !pokeSpeciesFetch){    
+        input.classList.remove("loading");
+        input.classList.add("noPokemonFound");
+        input.placeholder = "No pokémon found!";
+
+        setTimeout(() => {
+            input.classList.remove("noPokemonFound");
+            input.placeholder = "Enter name or pokédex number";
+        }, 1000);
+        
+        return;
+    };
+
+    // Everthing is fine, continue normally
+
+    setTimeout(() => {
+        input.classList.remove("loading");
+        input.placeholder = "Enter name or pokédex number";
+    }, 1000);
 
     pokeData = pokeDataFetch;
     pokeSpeciesData = pokeSpeciesFetch;
@@ -475,7 +502,11 @@ async function renderWeaknesses(){
 }
 
 function prevNextPokemon(next){
-    renderPokemon(pokeData.id + next);
+    next = pokeData.id + next;
+    if(next <= 0) next = 1025;
+    if(next >= 1025) next = 1;
+
+    renderPokemon(next);
 }
 
 async function renderMoveset(){
@@ -509,7 +540,7 @@ async function loadMoves(event) {
             <div class="moveContent">
                 <div class="moveArchetype">
                     <img src="assets/types/unknown.png">
-                    <b>Physical</b>
+                    <b>???</b>
                 </div>
                 <hr>
                 <div class="moveStats">
@@ -606,6 +637,11 @@ function renderMiscDiv(){
     }
 
     if(otherForms.length <= 3){ otherFormsDiv.classList = "centered"; }
+}
+
+function toggleSearchBar(){
+    document.getElementById("searchBar").classList.toggle("hidden");
+    document.getElementById("barHandleContent").classList.toggle("hidden");
 }
 
 document.getElementById("input").addEventListener("keypress", (e) => {
