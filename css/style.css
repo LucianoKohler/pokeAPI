@@ -21,7 +21,6 @@ img{
 h2{
     margin: 0px 0px 10px 0px;
     line-height: 28px;
-    overflow: hidden;
     text-align: center;
     font-size: 35px;
     overflow: visible;
@@ -71,7 +70,8 @@ main{
 #pokeImageDiv{
     aspect-ratio: 1/1 !important;
     padding-bottom: 10px;
-    flex: 1 1 325px;
+    height: 375px;
+    flex: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -122,7 +122,7 @@ main{
 }
 
 #pokeInfo{
-    flex: 6 1 350px;
+    flex: 4 1 350px;
     background-color: transparent;
     display: flex;
     flex-direction: column;
@@ -166,7 +166,6 @@ main{
 #pokeDesc{
     width: 100%;
     text-align: justify;
-    overflow-wrap: break-word;
     line-height: 16px;
     padding-bottom: 20px;
     font-style: italic;
@@ -253,7 +252,7 @@ main{
 }
 
 #stats{
-    flex: 3 1 350px;
+    flex: 3 1 200px;
 }
 
 #infoStats{
@@ -484,13 +483,16 @@ details summary::-webkit-details-marker {
 
 #forms{
     height: 120px;
+    width: 100%;
     display: flex;
-    justify-content: start;
-    align-items: center;
+    flex-direction: row;
     text-align: center;
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
-    gap: 8px;
+}
+
+#forms > *{
+    flex: 0 1 auto;
 }
 
 .centered{

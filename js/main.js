@@ -13,8 +13,46 @@ types =
  "electric", "psychic", 
  "ice", "dragon", 
  "dark", "fairy" ]
-moveOffset = 0;
 
+ /* Some pokémon don't get treated by their standard 
+names on the API, this avoids 404 on specific pokémon*/
+aliases = {
+    "giratina": "giratina-altered",
+    "deoxys": "deoxys-normal",
+    "darmanitan": "darmanitan-standard",
+    "basculin" : "basculin-red-striped",
+    "oricorio" : "oricorio-baile",
+    "shaymin" : "shaymin-land",
+    "wormadam" : "wormadam-plant",
+    "basculegion" : "basculegion-male",
+    "tornadus" : "tornadus-incarnate",
+    "thundurus" : "thundurus-incarnate",
+    "landorus" : "landorus-incarnate",
+    "enamorus" : "enamorus-incarnate",
+    "keldeo" : "keldeo-ordinary",
+    "meloetta" : "meloetta-aria",
+    "meowstic" : "meowstic-male",
+    "aegislash": "aegislash-shield",
+    "pumpkaboo": "pumpkaboo-average",
+    "gourgeist": "gourgeist-average",
+    "lycanroc" : "lycanroc-midday",
+    "wishiwashi" : "wishiwashi-solo",
+    "minior" : "minior-red-meteor",
+    "mimikyu" : "mimikyu-disguised",
+    "toxtricity" : "toxtricity-amped",
+    "eiscue" : "eiscue-ice",
+    "indeedee" : "indeedee-male",
+    "morpeko" : "morpeko-full-belly",
+    "urshifu" : "urshifu-single-strike",
+    "oinkologne" : "oinkologne-male",
+    "maushold" : "maushold-family-of-four",
+    "squawkabilly" : "squawkabilly-green-plumage",
+    "palafin" : "palafin-zero",
+    "tatsugiri" : "tatsugiri-curly",
+    "dudunsparce" : "dudunsparce-two-segment"
+}
+
+moveOffset = 0; // For lazy loading moves
 
  // Most important function, gets anything from the API, caches, and returns it.
  async function getObject(obj, id){
@@ -68,7 +106,13 @@ async function renderPokemon(id){
     renderCooldown = 1;
     setTimeout(() => {renderCooldown = 0; console.log("cooldown zerado")}, 2000);
 
-    let pokeDataFetch = await getObject("pokemon", id);
+    id = id.toString().toLowerCase();
+    let pokeDataFetch;
+    if(aliases[id]){
+        pokeDataFetch = await getObject("pokemon", aliases[id]);
+    }else{
+        pokeDataFetch = await getObject("pokemon", id);
+    }
     let pokeSpeciesFetch = await getObject("pokemon-species", id);
     if(!pokeDataFetch || !pokeSpeciesFetch){ window.alert("Erro 404, nenhum pokémon encontrado com tal nome"); return; }
 
@@ -568,8 +612,11 @@ document.getElementById("input").addEventListener("keypress", (e) => {
     if(e.key == "Enter"){
         renderPokemon(document.getElementById("input").value)
     }
-})
-document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
+});
 
-renderPokemon(723);
+document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
+window.addEventListener("scroll", () => {hideTooltip()})
+document.getElementById("moves").addEventListener("scroll", () => {hideTooltip()})
+
+renderPokemon("rotom");
 // renderPokemon(Math.floor(Math.random()*1025) + 1);
