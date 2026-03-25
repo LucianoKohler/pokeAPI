@@ -1,8 +1,7 @@
 :root{
-    --main: #DDDDDD;
-    --secon: #AAAAAA;
-    --terc: #888888;
-    --quad: #555555;
+    --secon: #CCC;
+    --terc: #AAA;
+    --quad: #999;
 }
 
 @font-face {
@@ -13,6 +12,7 @@
 *{
     box-sizing: border-box;
     font-family: kanit;
+    image-rendering: pixelated;
 }
 
 img{
@@ -32,6 +32,7 @@ html{
 }
 
 body{
+    background: url(../assets/divBackgrounds/Pokemon151pattern.jpg);
     padding: 0;
     margin: 0;
     min-height: 100vh;
@@ -46,7 +47,7 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var(--main);
+    background-color: rgba(255, 255, 255, 0.9)
 }
 
 .upper, .lower{
@@ -281,7 +282,7 @@ main{
 }
 
 progress::-webkit-progress-bar {
-  background-color: gray;
+  background-color: var(--terc);
   border-radius: 20px;
 }
 
@@ -321,6 +322,10 @@ h3{
     border-spacing: 0;
 }
 
+.weaknessCell{
+    background-color: #EEE;
+}
+
 table tr:not(:first-child):not(.weakness) th{
     border-top: 3px solid white;
 }
@@ -328,6 +333,7 @@ table tr:not(:first-child):not(.weakness) th{
 th{
     padding: clamp(5px, 1vw, 10px);
 }
+
 
 .weakness_2{   background-color: #0FD232; }
 .weakness_4{   background-color: #017d18; }
@@ -534,7 +540,7 @@ details summary::-webkit-details-marker {
     text-wrap: wrap;
 }
 
-.Easy {font-weight: 700; color: rgb(114, 252, 114);}
+.Easy {font-weight: 700; color: rgb(33, 225, 33);}
 .Medium {font-weight: 700; color: rgb(255, 187, 0);}
 .Hard {font-weight: 700; color: rgb(209, 12, 52);}
 .Almost {font-weight: 700; color: rgb(125, 4, 125);} /* Almost Impossible */
@@ -544,7 +550,7 @@ details summary::-webkit-details-marker {
     bottom: 0;
     width: 900px;
     max-width: 100%;
-    background-color: white;
+    background-color: var(--quad);
     border-radius: 20px 20px 0 0;
     padding: 10px;
     display: flex;
@@ -557,23 +563,23 @@ details summary::-webkit-details-marker {
 #barHandle{
     cursor: pointer;
     user-select: none;
-    padding: 20px 50px 30px 50px;
+    background-color: var(--quad);
+    padding: 10px 50px;
     border-radius: 10px 10px 0 0;
     position: absolute;
-    bottom: 68px;
+    bottom: 65px;
     left: 10px;
     transition: transform .5s ease;
-    background: url(../assets/divBackgrounds/handle.png) center;
-    background-size: cover;
 }
 
 #barHandleContent{ transition: transform .5s ease;}
 
-#searchBar.hidden{transform: translateY(72px);}
+#searchBar.hidden{transform: translateY(70px);}
+#barHandleContent.hidden{transform: rotate(180deg);}   
 
 #searchBar button{
     cursor: pointer;
-    border: 2px solid var(--quad);
+    border: none;
     padding: clamp(5px, 10px, 20px);
     font-weight: 700;
     line-height: 16px;
@@ -593,7 +599,6 @@ details summary::-webkit-details-marker {
     border-radius: 15px 0 0 15px;
     border: none;
     text-wrap: nowrap;
-    border-right: 0px;
 }
 
 .loading{
@@ -608,15 +613,11 @@ details summary::-webkit-details-marker {
 .bar{
     display: flex;
     width: 50%;
-    border: 2px solid var(--quad);
-    border-radius: 15px;
-
 }
 
 .bar button{
     padding: 12px 15px 15px 0 !important;
     border-radius: 0 15px 15px 0;
-    border: none !important;
 }
 
 .nextPrev{

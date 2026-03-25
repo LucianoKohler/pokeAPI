@@ -329,7 +329,7 @@ async function renderStats(){
         sum += statsData[i].base_stat 
         stats[i].innerHTML = statsData[i].base_stat
         statBars[i].value = statsData[i].base_stat
-        statColor = `hsl(${(statsData[i].base_stat / 255) * 200}, 100%, 45%)`
+        statColor = `hsl(${(statsData[i].base_stat / 255) * 200}, 100%, 60%)`
         statBars[i].style.setProperty("--color", statColor);
     }
     stats[6].innerHTML = sum
@@ -644,6 +644,7 @@ function renderMiscDiv(){
 
 function toggleSearchBar(){
     document.getElementById("searchBar").classList.toggle("hidden");
+    document.getElementById("barHandleContent").classList.toggle("hidden");
 }
 
 document.getElementById("input").addEventListener("keypress", (e) => {
@@ -656,4 +657,4 @@ document.getElementById("search").addEventListener("click", () => {renderPokemon
 window.addEventListener("scroll", () => {hideTooltip()})
 document.getElementById("moves").addEventListener("scroll", () => {hideTooltip()})
 
-renderPokemon(Math.floor(Math.random()*1025) + 1);
+// renderPokemon(Math.floor(Math.random()*1025) + 1);
