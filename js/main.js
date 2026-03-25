@@ -518,15 +518,15 @@ async function renderMoveset(){
     
     
     let event = movesDiv.addEventListener("scroll", () => {
-        if(movesDiv.scrollHeight - movesDiv.scrollTop == movesDiv.clientHeight){
+        if(movesDiv.scrollHeight - movesDiv.scrollTop <= movesDiv.clientHeight + 5){
             loadMoves();
         }
     })
-    loadMoves(event);
+    loadMoves();
 
 }
 
-async function loadMoves(event) {
+async function loadMoves() {
     let moves = await pokeData.moves;
     let movesDiv = document.getElementById("moves");
     let i;
@@ -657,4 +657,4 @@ document.getElementById("search").addEventListener("click", () => {renderPokemon
 window.addEventListener("scroll", () => {hideTooltip()})
 document.getElementById("moves").addEventListener("scroll", () => {hideTooltip()})
 
-// renderPokemon(Math.floor(Math.random()*1025) + 1);
+renderPokemon(Math.floor(Math.random()*1025) + 1);
