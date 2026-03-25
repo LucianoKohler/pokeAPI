@@ -1,8 +1,7 @@
 :root{
-    --main: #DDDDDD;
-    --secon: #AAAAAA;
-    --terc: #888888;
-    --quad: #555555;
+    --secon: #CCC;
+    --terc: #AAA;
+    --quad: #999;
 }
 
 @font-face {
@@ -13,6 +12,7 @@
 *{
     box-sizing: border-box;
     font-family: kanit;
+    image-rendering: pixelated;
 }
 
 img{
@@ -32,6 +32,7 @@ html{
 }
 
 body{
+    background: url(../assets/misc/Pokemon151pattern.jpg);
     padding: 0;
     margin: 0;
     min-height: 100vh;
@@ -46,7 +47,7 @@ main{
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: var(--main);
+    background-color: rgba(255, 255, 255, 0.9)
 }
 
 .upper, .lower{
@@ -281,7 +282,7 @@ main{
 }
 
 progress::-webkit-progress-bar {
-  background-color: gray;
+  background-color: var(--terc);
   border-radius: 20px;
 }
 
@@ -321,6 +322,10 @@ h3{
     border-spacing: 0;
 }
 
+.weaknessCell{
+    background-color: #EEE;
+}
+
 table tr:not(:first-child):not(.weakness) th{
     border-top: 3px solid white;
 }
@@ -328,6 +333,7 @@ table tr:not(:first-child):not(.weakness) th{
 th{
     padding: clamp(5px, 1vw, 10px);
 }
+
 
 .weakness_2{   background-color: #0FD232; }
 .weakness_4{   background-color: #017d18; }
@@ -534,7 +540,7 @@ details summary::-webkit-details-marker {
     text-wrap: wrap;
 }
 
-.Easy {font-weight: 700; color: rgb(114, 252, 114);}
+.Easy {font-weight: 700; color: rgb(33, 225, 33);}
 .Medium {font-weight: 700; color: rgb(255, 187, 0);}
 .Hard {font-weight: 700; color: rgb(209, 12, 52);}
 .Almost {font-weight: 700; color: rgb(125, 4, 125);} /* Almost Impossible */
@@ -629,12 +635,12 @@ details summary::-webkit-details-marker {
     border-radius: 0 10px 10px 0;
 }
 
-.fullList, .RandomPokemon{
+#fullList, .RandomPokemon{
     width: 15%;
     flex: 1 1;
 }
 
-.fullList button, .RandomPokemon button{
+#fullList button, .RandomPokemon button{
     padding: 0 !important;
     font-size: clamp(10px, 1.5vw, 16px);
     text-wrap: wrap;

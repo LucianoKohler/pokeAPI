@@ -103,17 +103,20 @@ function capitalize(str){
 
 // Main function
 async function renderPokemon(id){
+
+    // Cooldown treatment
     if(renderCooldown){ return; }
     renderCooldown = 1;
-    setTimeout(() => { renderCooldown = 0; console.log("cooldown zerado") }, 1000);
+    setTimeout(() => { renderCooldown = 0; }, 1000);
 
+    // Input formatting
     let input = document.getElementById("input")
     input.classList.add("loading")
     input.placeholder = ""
     input.blur();
     input.value = ""
     
-    id = id.toString().toLowerCase();
+    id = id.toString().toLowerCase().replace(" ", "-");
     let pokeDataFetch;
     if(aliases[id]){
         pokeDataFetch = await getObject("pokemon", aliases[id]);
@@ -326,7 +329,7 @@ async function renderStats(){
         sum += statsData[i].base_stat 
         stats[i].innerHTML = statsData[i].base_stat
         statBars[i].value = statsData[i].base_stat
-        statColor = `hsl(${(statsData[i].base_stat / 255) * 200}, 100%, 45%)`
+        statColor = `hsl(${(statsData[i].base_stat / 255) * 200}, 100%, 60%)`
         statBars[i].style.setProperty("--color", statColor);
     }
     stats[6].innerHTML = sum
@@ -515,15 +518,15 @@ async function renderMoveset(){
     
     
     let event = movesDiv.addEventListener("scroll", () => {
-        if(movesDiv.scrollHeight - movesDiv.scrollTop == movesDiv.clientHeight){
+        if(movesDiv.scrollHeight - movesDiv.scrollTop <= movesDiv.clientHeight + 5){
             loadMoves();
         }
     })
-    loadMoves(event);
+    loadMoves();
 
 }
 
-async function loadMoves(event) {
+async function loadMoves() {
     let moves = await pokeData.moves;
     let movesDiv = document.getElementById("moves");
     let i;
@@ -653,6 +656,9 @@ document.getElementById("input").addEventListener("keypress", (e) => {
 document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
 window.addEventListener("scroll", () => {hideTooltip()})
 document.getElementById("moves").addEventListener("scroll", () => {hideTooltip()})
+document.getElementById("fullListButton").addEventListener(("click"), () => {
+    document.getElementById("fullListButton").innerText = "WIP!";
+    setTimeout(() => {document.getElementById("fullListButton").innerText = "Full List";}, 1000)
+})
 
-renderPokemon("rotom");
-// renderPokemon(Math.floor(Math.random()*1025) + 1);
+renderPokemon(Math.floor(Math.random()*1025) + 1);
