@@ -656,5 +656,9 @@ document.getElementById("input").addEventListener("keypress", (e) => {
 document.getElementById("search").addEventListener("click", () => {renderPokemon(document.getElementById("input").value)})
 window.addEventListener("scroll", () => {hideTooltip()})
 document.getElementById("moves").addEventListener("scroll", () => {hideTooltip()})
+document.getElementById("fullListButton").addEventListener(("click"), () => {
+    document.getElementById("fullListButton").innerText = "WIP!";
+    setTimeout(() => {document.getElementById("fullListButton").innerText = "Full List";}, 1000)
+})
 
 renderPokemon(Math.floor(Math.random()*1025) + 1);
