@@ -103,17 +103,20 @@ function capitalize(str){
 
 // Main function
 async function renderPokemon(id){
+
+    // Cooldown treatment
     if(renderCooldown){ return; }
     renderCooldown = 1;
-    setTimeout(() => { renderCooldown = 0; console.log("cooldown zerado") }, 1000);
+    setTimeout(() => { renderCooldown = 0; }, 1000);
 
+    // Input formatting
     let input = document.getElementById("input")
     input.classList.add("loading")
     input.placeholder = ""
     input.blur();
     input.value = ""
     
-    id = id.toString().toLowerCase();
+    id = id.toString().toLowerCase().replace(" ", "-");
     let pokeDataFetch;
     if(aliases[id]){
         pokeDataFetch = await getObject("pokemon", aliases[id]);
@@ -641,7 +644,6 @@ function renderMiscDiv(){
 
 function toggleSearchBar(){
     document.getElementById("searchBar").classList.toggle("hidden");
-    document.getElementById("barHandleContent").classList.toggle("hidden");
 }
 
 document.getElementById("input").addEventListener("keypress", (e) => {
@@ -654,5 +656,4 @@ document.getElementById("search").addEventListener("click", () => {renderPokemon
 window.addEventListener("scroll", () => {hideTooltip()})
 document.getElementById("moves").addEventListener("scroll", () => {hideTooltip()})
 
-renderPokemon("rotom");
-// renderPokemon(Math.floor(Math.random()*1025) + 1);
+renderPokemon(Math.floor(Math.random()*1025) + 1);

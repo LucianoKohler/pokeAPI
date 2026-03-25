@@ -544,7 +544,7 @@ details summary::-webkit-details-marker {
     bottom: 0;
     width: 900px;
     max-width: 100%;
-    background-color: var(--quad);
+    background-color: white;
     border-radius: 20px 20px 0 0;
     padding: 10px;
     display: flex;
@@ -557,23 +557,23 @@ details summary::-webkit-details-marker {
 #barHandle{
     cursor: pointer;
     user-select: none;
-    background-color: var(--quad);
-    padding: 10px 50px;
+    padding: 20px 50px 30px 50px;
     border-radius: 10px 10px 0 0;
     position: absolute;
-    bottom: 65px;
+    bottom: 68px;
     left: 10px;
     transition: transform .5s ease;
+    background: url(../assets/divBackgrounds/handle.png) center;
+    background-size: cover;
 }
 
 #barHandleContent{ transition: transform .5s ease;}
 
-#searchBar.hidden{transform: translateY(70px);}
-#barHandleContent.hidden{transform: rotate(180deg);}   
+#searchBar.hidden{transform: translateY(72px);}
 
 #searchBar button{
     cursor: pointer;
-    border: none;
+    border: 2px solid var(--quad);
     padding: clamp(5px, 10px, 20px);
     font-weight: 700;
     line-height: 16px;
@@ -593,6 +593,7 @@ details summary::-webkit-details-marker {
     border-radius: 15px 0 0 15px;
     border: none;
     text-wrap: nowrap;
+    border-right: 0px;
 }
 
 .loading{
@@ -607,11 +608,15 @@ details summary::-webkit-details-marker {
 .bar{
     display: flex;
     width: 50%;
+    border: 2px solid var(--quad);
+    border-radius: 15px;
+
 }
 
 .bar button{
     padding: 12px 15px 15px 0 !important;
     border-radius: 0 15px 15px 0;
+    border: none !important;
 }
 
 .nextPrev{
