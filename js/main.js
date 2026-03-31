@@ -288,7 +288,11 @@ async function renderAbilities(){
 async function renderImage(){
     let img = pokeData.sprites[pokemonState]
 
-    document.getElementById("PokeImage").src = img
+    let pokeImage = document.getElementById("PokeImage")
+    pokeImage.src = img
+    pokeImage.classList.add("pokeJump");
+    pokeImage.addEventListener("animationend", ()=>{ pokeImage.classList.remove("pokeJump")})
+
 
     let backgroundDiv = document.getElementById("pokeImageDiv");
     let background;
@@ -314,6 +318,7 @@ async function renderImage(){
         case 'ghost':    background = 'night'; break;
         default:         background = 'forest';
     }
+
 
     backgroundDiv.style.background = `url(./assets/habitats/pokeframe.png), url(./assets/habitats/${background}.png)`
 }
@@ -642,6 +647,8 @@ function renderMiscDiv(){
     if(otherForms.length <= 3){ otherFormsDiv.classList = "centered"; }
 }
 
+// Other functions and eventListeners
+
 function toggleSearchBar(){
     document.getElementById("searchBar").classList.toggle("hidden");
     document.getElementById("barHandleContent").classList.toggle("hidden");
@@ -659,6 +666,6 @@ document.getElementById("moves").addEventListener("scroll", () => {hideTooltip()
 document.getElementById("fullListButton").addEventListener(("click"), () => {
     document.getElementById("fullListButton").innerText = "WIP!";
     setTimeout(() => {document.getElementById("fullListButton").innerText = "Full List";}, 1000)
-})
+});
 
 renderPokemon(Math.floor(Math.random()*1025) + 1);
