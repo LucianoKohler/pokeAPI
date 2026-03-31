@@ -71,6 +71,18 @@ main{
     image-rendering: pixelated;
 }
 
+.pokeJump{
+    animation-name: pokeJump;
+    animation-duration: .2s;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes pokeJump{
+    0%{ transform: translateY(20%)}
+    50%{ transform: translateY(0%)}
+    100%{ transform: translateY(20%)}
+}
+
 #pokeImageDiv{
     aspect-ratio: 1/1 !important;
     padding-bottom: 10px;
